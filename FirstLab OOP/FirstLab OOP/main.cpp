@@ -3,7 +3,7 @@
 #include <string>
 int main()
 {
-	Fraction f, k, resadd, ressub, resmul, resdiv;
+	/*Fraction f, k, resadd, ressub, resmul, resdiv;
 	f.numerator = 1;
 	f.denominator = 2;
 	k.numerator = 3;
@@ -19,5 +19,8 @@ int main()
 	resmul.PrintFract();
 	resdiv = f.Division(k);
 	std::cout << std::endl << "result division fractions:";
-	resdiv.PrintFract();
+	resdiv.PrintFract();*/
+	Fraction a, b, c(2, 3);
+	a.PrintFract();
+	c.PrintFract();
 }
