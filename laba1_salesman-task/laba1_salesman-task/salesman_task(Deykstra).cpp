@@ -30,7 +30,7 @@ int AddMas(int* a, int n)
 		k += a[i];
 	return k;
 }
-int MinWay(int* way, int** matr, int n)
+int WeightWay(int* way, int** matr, int n)
 {
 	int min = 0;
 	int i;
@@ -54,6 +54,38 @@ void SwapQ(int& a, int& b)
 {
 	int x;
 	x = a; a = b; b = x;
+}
+void SearchOptimalWeight(int* way, int** matr, int number_city, int *min_way)
+{
+	for (int k = 1; k <= Factorial(number_city - 1) - 1; k++)//-1 так как мы уже сделали одну последовательность
+	{
+		int max_i = -1, max_j;
+		for (int i = 1; i < number_city - 1; i++)
+		{
+			if (way[i] < way[i + 1])
+				max_i = i;
+		}
+		if (max_i == -1)
+			break;
+		for (int j = max_i + 1; j <= number_city - 1; j++)
+		{
+			if (way[j] > way[max_i])
+				max_j = j;
+		}
+		SwapQ(way[max_i], way[max_j]);
+		int j = number_city - 1;
+		int i = max_i + 1;
+		while (i < j)
+		{
+			SwapQ(way[i], way[j]);
+			i++;
+			j--;
+		}
+		if (WeightWay(way, matr, number_city) < WeightWay(min_way, matr, number_city))
+			CopyMas(way, min_way, number_city + 1);
+		OutputMas(way, number_city + 1);
+		std::cout << " weight " << WeightWay(way, matr, number_city) << std::endl;
+	}
 }
 int main()
 {
@@ -83,41 +115,15 @@ int main()
 			way[i++] = n++;
 	}
 	OutputMas(way, number_city + 1);
-	std::cout << " weight " << MinWay(way, matr_way_weight, number_city) << std::endl;
+	std::cout << " weight " << WeightWay(way, matr_way_weight, number_city) << std::endl;
 	CopyMas(way, min_way, number_city + 1);//предполагаем, то что наш начальный путь может быть минимальным 
-	for (int k = 1; k <= Factorial(number_city - 1) - 1; k++)//-1 так как мы уже сделали одну последовательность
-	{
-		int max_i = -1, max_j;
-		for (int i = 1; i < number_city - 1; i++)
-		{
-			if (way[i] < way[i + 1])
-				max_i = i;
-		}
-		if (max_i == -1)
-			break;
-		for (int j = max_i + 1; j <= number_city - 1; j++)
-		{
-			if (way[j] > way[max_i])
-				max_j = j;
-		}
-		SwapQ(way[max_i], way[max_j]);
-		int j = number_city - 1;
-		int i = max_i + 1;
-		while (i < j)
-		{
-			SwapQ(way[i], way[j]);
-			i++;
-			j--;
-		}
-		if (MinWay(way, matr_way_weight, number_city) < MinWay(min_way, matr_way_weight, number);
-			CopyMas(way, min_way, number_city + 1);
-		OutputMas(way, number_city + 1);
-	}
-	//
+	SearchOptimalWeight(way, matr_way_weight, number_city, min_way);
+	std::cout << "minimum weight path "; OutputMas(min_way, number_city + 1); std::cout << "his weight " << WeightWay(min_way, matr_way_weight, number_city);
 	//удаляем память, выделенную под матрицу
 	for (int i = 0; i < number_city; i++)
 		delete[] matr_way_weight[i];
 	delete[] matr_way_weight;
 	//удаляем память, выделенную под массив
 	delete[] way;
+	delete[] min_way;
 }
