@@ -50,7 +50,7 @@ void CopyMas(int* a, int* b, int n)
 {
 	for (int i = 0; i < n; i++) b[i] = a[i];
 }
-void SwapQ(int& a, int& b)
+void Swap(int& a, int& b)
 {
 	int x;
 	x = a; a = b; b = x;
@@ -72,12 +72,12 @@ void SearchOptimalWeight(int* way, int** matr, int number_city, int *min_way)
 			if (way[j] > way[max_i])
 				max_j = j;
 		}
-		SwapQ(way[max_i], way[max_j]);
+		Swap(way[max_i], way[max_j]);
 		int j = number_city - 1;
 		int i = max_i + 1;
 		while (i < j)
 		{
-			SwapQ(way[i], way[j]);
+			Swap(way[i], way[j]);
 			i++;
 			j--;
 		}
