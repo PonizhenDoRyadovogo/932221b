@@ -39,13 +39,6 @@ int WeightWay(int* way, int** matr, int n)
 	min += matr[way[i] - 1][way[0] - 1];
 	return min;
 }
-int Factorial(int n)
-{
-	int res = 1, i;
-	for (i = 2; i <= n; i++)
-		res *= i;
-	return res;
-}
 void CopyMas(int* a, int* b, int n)
 {
 	for (int i = 0; i < n; i++) b[i] = a[i];
@@ -57,7 +50,7 @@ void Swap(int& a, int& b)
 }
 void SearchOptimalWeight(int* way, int** matr, int number_city, int *min_way)
 {
-	for (int k = 1; k <= Factorial(number_city - 1) - 1; k++)//-1 так как мы уже сделали одну последовательность
+	for (int k = 1; ; k++)
 	{
 		int max_i = -1, max_j;
 		for (int i = 1; i < number_city - 1; i++)
@@ -89,41 +82,46 @@ void SearchOptimalWeight(int* way, int** matr, int number_city, int *min_way)
 }
 int main()
 {
-	int** matr_way_weight, number_city, starting_city, *way, *min_way, weight_of_way;
+	srand(time(0));
+	int** matr_way_weight, number_city, starting_city, *way, *min_way;
 	std::cout << "enter the number of cities: ";
 	std::cin >> number_city;
 	std::cout << std::endl <<"enter the number of starting city: ";
 	std::cin >> starting_city;
-	//создаем матрицу стоимостей маршрутов
-	matr_way_weight = new int* [number_city];//выделяем память под массив указателей
-	for (int i = 0; i < number_city; i++)//выделяем память под каждую "строку"
+	//СЃРѕР·РґР°РµРј РјР°С‚СЂРёС†Сѓ СЃС‚РѕРёРјРѕСЃС‚РµР№ РјР°СЂС€СЂСѓС‚РѕРІ
+	matr_way_weight = new int* [number_city];//РІС‹РґРµР»СЏРµРј РїР°РјСЏС‚СЊ РїРѕРґ РјР°СЃСЃРёРІ СѓРєР°Р·Р°С‚РµР»РµР№
+	for (int i = 0; i < number_city; i++)//РІС‹РґРµР»СЏРµРј РїР°РјСЏС‚СЊ РїРѕРґ РєР°Р¶РґСѓСЋ "СЃС‚СЂРѕРєСѓ"
 		matr_way_weight[i] = new int[number_city];
 	RandomMatrix(matr_way_weight, number_city);
-	for (int i = 0; i < number_city; i++)//зануляем диагонали матрицы
+	for (int i = 0; i < number_city; i++)//Р·Р°РЅСѓР»СЏРµРј РґРёР°РіРѕРЅР°Р»Рё РјР°С‚СЂРёС†С‹
 		matr_way_weight[i][i] = 0;
 	OutputMatrix(matr_way_weight, number_city);
-	way = new int[number_city + 1];//создаем массив, в котором будут храниться пути
+	way = new int[number_city + 1];//СЃРѕР·РґР°РµРј РјР°СЃСЃРёРІ, РІ РєРѕС‚РѕСЂРѕРј Р±СѓРґСѓС‚ С…СЂР°РЅРёС‚СЊСЃСЏ РїСѓС‚Рё
 	min_way = new int [number_city + 1];
-	//создаем первый путь
+	//СЃРѕР·РґР°РµРј РїРµСЂРІС‹Р№ РїСѓС‚СЊ
 	for (int i = 0, n = 1; i < number_city + 1; )
 	{
 		if (i == 0 || i == number_city)
 			way[i++] = starting_city;
 		else if (n != starting_city)
 			way[i++] = n++;
-		else if (++n == starting_city)//если n == стартовому городу, то нужно увеличить n и записать его, после этого увеличить n
+		else if (++n == starting_city)//РµСЃР»Рё n == СЃС‚Р°СЂС‚РѕРІРѕРјСѓ РіРѕСЂРѕРґСѓ, С‚Рѕ РЅСѓР¶РЅРѕ СѓРІРµР»РёС‡РёС‚СЊ n Рё Р·Р°РїРёСЃР°С‚СЊ РµРіРѕ, РїРѕСЃР»Рµ СЌС‚РѕРіРѕ СѓРІРµР»РёС‡РёС‚СЊ n
 			way[i++] = n++;
 	}
 	OutputMas(way, number_city + 1);
 	std::cout << " weight " << WeightWay(way, matr_way_weight, number_city) << std::endl;
-	CopyMas(way, min_way, number_city + 1);//предполагаем, то что наш начальный путь может быть минимальным 
+	CopyMas(way, min_way, number_city + 1);//РїСЂРµРґРїРѕР»Р°РіР°РµРј, С‚Рѕ С‡С‚Рѕ РЅР°С€ РЅР°С‡Р°Р»СЊРЅС‹Р№ РїСѓС‚СЊ РјРѕР¶РµС‚ Р±С‹С‚СЊ РјРёРЅРёРјР°Р»СЊРЅС‹Рј 
 	SearchOptimalWeight(way, matr_way_weight, number_city, min_way);
-	std::cout << "minimum weight path "; OutputMas(min_way, number_city + 1); std::cout << "his weight " << WeightWay(min_way, matr_way_weight, number_city);
-	//удаляем память, выделенную под матрицу
+
+	std::cout << "minimum weight path ";
+	OutputMas(min_way, number_city + 1);
+	std::cout << "his weight " << WeightWay(min_way, matr_way_weight, number_city);
+
+	//СѓРґР°Р»СЏРµРј РїР°РјСЏС‚СЊ, РІС‹РґРµР»РµРЅРЅСѓСЋ РїРѕРґ РјР°С‚СЂРёС†Сѓ
 	for (int i = 0; i < number_city; i++)
 		delete[] matr_way_weight[i];
 	delete[] matr_way_weight;
-	//удаляем память, выделенную под массив
+	//СѓРґР°Р»СЏРµРј РїР°РјСЏС‚СЊ, РІС‹РґРµР»РµРЅРЅСѓСЋ РїРѕРґ РјР°СЃСЃРёРІ
 	delete[] way;
 	delete[] min_way;
 }
