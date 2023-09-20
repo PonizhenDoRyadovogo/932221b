@@ -41,6 +41,6 @@ Fraction::Fraction()
 Fraction::Fraction(int numerator, int denominator)//это не трогать
 {
 	//как исправить?
-	numerator = numerator;
-	denominator = denominator;
+	this->numerator = numerator;
+	this->denominator = denominator;
 }
