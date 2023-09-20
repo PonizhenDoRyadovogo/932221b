@@ -4,10 +4,9 @@
 
 void RandomMatrix(int **matr, int m)
 {
-	srand(time(0));
 	for (int i = 0; i < m; i++)
 		for (int j = 0; j < m; j++)
-			matr[i][j] = 1 + rand() % (20 - 1 + 1);
+			matr[i][j] = 1 + rand() % 20;
 }
 void OutputMatrix(int** matr, int m)
 {
@@ -48,10 +47,27 @@ void Swap(int& a, int& b)
 	int x;
 	x = a; a = b; b = x;
 }
-void SearchOptimalWeight(int* way, int** matr, int number_city, int *min_way)
+void SearchOptimalWeight(int* way, int** matr, int number_city, int *min_way, int starting_city)
 {
+	int first_way = 1;
 	for (int k = 1; ; k++)
 	{
+		if (first_way == 1)//создаем первый путь
+		{
+			for (int i = 0, n = 1; i < number_city + 1; )
+			{
+				if (i == 0 || i == number_city)
+					way[i++] = starting_city;
+				else if (n != starting_city)
+					way[i++] = n++;
+				else if (++n == starting_city)//если n == стартовому городу, то нужно увеличить n и записать его, после этого увеличить n
+					way[i++] = n++;
+				first_way -= 1;
+			}
+			OutputMas(way, number_city + 1);
+			std::cout << " weight " << WeightWay(way, matr, number_city) << std::endl;
+			CopyMas(way, min_way, number_city + 1);//предполагаем, то что наш начальный путь может быть минимальным
+		}
 		int max_i = -1, max_j;
 		for (int i = 1; i < number_city - 1; i++)
 		{
@@ -98,20 +114,7 @@ int main()
 	OutputMatrix(matr_way_weight, number_city);
 	way = new int[number_city + 1];//создаем массив, в котором будут храниться пути
 	min_way = new int [number_city + 1];
-	//создаем первый путь
-	for (int i = 0, n = 1; i < number_city + 1; )
-	{
-		if (i == 0 || i == number_city)
-			way[i++] = starting_city;
-		else if (n != starting_city)
-			way[i++] = n++;
-		else if (++n == starting_city)//если n == стартовому городу, то нужно увеличить n и записать его, после этого увеличить n
-			way[i++] = n++;
-	}
-	OutputMas(way, number_city + 1);
-	std::cout << " weight " << WeightWay(way, matr_way_weight, number_city) << std::endl;
-	CopyMas(way, min_way, number_city + 1);//предполагаем, то что наш начальный путь может быть минимальным 
-	SearchOptimalWeight(way, matr_way_weight, number_city, min_way);
+	SearchOptimalWeight(way, matr_way_weight, number_city, min_way, starting_city);
 
 	std::cout << "minimum weight path ";
 	OutputMas(min_way, number_city + 1);
