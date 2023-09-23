@@ -64,8 +64,8 @@ void SearchOptimalWeight(int* way, int** matr, int number_city, int *min_way, in
 					way[i++] = n++;
 				first_way -= 1;
 			}
-			OutputMas(way, number_city + 1);
-			std::cout << " weight " << WeightWay(way, matr, number_city) << std::endl;
+			/*OutputMas(way, number_city + 1);
+			std::cout << " weight " << WeightWay(way, matr, number_city) << std::endl;*/
 			CopyMas(way, min_way, number_city + 1);//предполагаем, то что наш начальный путь может быть минимальным
 		}
 		int max_i = -1, max_j;
@@ -92,14 +92,117 @@ void SearchOptimalWeight(int* way, int** matr, int number_city, int *min_way, in
 		}
 		if (WeightWay(way, matr, number_city) < WeightWay(min_way, matr, number_city))
 			CopyMas(way, min_way, number_city + 1);
-		OutputMas(way, number_city + 1);
-		std::cout << " weight " << WeightWay(way, matr, number_city) << std::endl;
+		//OutputMas(way, number_city + 1);
+		//std::cout << " weight " << WeightWay(way, matr, number_city) << std::endl;
+	}
+}
+int MinimalElement(int** matr, int number_city, int& i_min, int& j_min)
+{
+	int min_element = 1000;
+	for (int i = 0;i < number_city;i++)
+	{
+		for (int j = 0;j < number_city;j++)
+		{
+			if (matr[i][j] < min_element && matr[i][j] != 0)
+			{
+				min_element = matr[i][j];
+				i_min = i;
+				j_min = j;
+			}
+		}
+	}
+	return min_element;
+}
+void TransformMatrix(int** matr, int i_min, int j_min, int number_city)
+{
+	matr[j_min][i_min] = 0;//let's go on a spree the way back
+	for (int i = 0, j = 0;i < number_city && j < number_city;i++, j++)
+	{
+		matr[i_min][j] = 0;
+		matr[i][j_min] = 0;
+	}
+}
+bool SearchCycle(int* way, int number_city, int i, int j)
+{
+	//we are looking for matching elements and if they are linked to the same element that this arc forms a cycle
+	int ki = 0, kj = -1;
+	for (int i_way = 0, j_way = 1; i_way < (number_city * 2) - 1 && j_way < number_city * 2;i_way += 2, j_way += 2)
+	{
+		if (way[i_way] == way[j])
+			ki = way[i_way + 1];
+		if (way[j_way] == way[i])
+			kj = way[j_way - 1];
+	}
+	if (ki == kj)
+		return true;
+	else
+		return false;
+}
+int Heuristics(int* way, int **matr_way_weight, int number_city, int &i_min, int &j_min, int min_element, int weight, int *heuristics_min_way)
+{
+	for (int i = 0, j = 1, k = 1;;)//подсчет веса
+	{
+		min_element = MinimalElement(matr_way_weight, number_city, i_min, j_min);
+		if (min_element == 1000)
+			break;
+		way[i] = i_min + 1;
+		way[j] = j_min + 1;
+		if (k != number_city)
+		{
+			if (SearchCycle(way, number_city, i, j) == true)
+			{
+				way[i] = 0;
+				way[j] = 0;
+				matr_way_weight[i_min][j_min] = 0;
+			}
+			else
+			{
+				weight += min_element;
+				TransformMatrix(matr_way_weight, i_min, j_min, number_city);
+				i += 2;
+				j += 2;
+				k++;
+			}
+		}
+		else
+		{
+			weight += min_element;
+			TransformMatrix(matr_way_weight, i_min, j_min, number_city);
+			i += 2;
+			j += 2;
+		}
+	}
+	heuristics_min_way[0] = way[0];
+	heuristics_min_way[1] = way[1];
+	for (int i = 1, k = 2, j; k <= number_city;)
+	{
+		for (j = 2;j < number_city * 2;j += 2)
+		{
+			if (way[j] == way[i])
+			{
+				heuristics_min_way[k] = way[j + 1];
+				break;
+			}
+		}
+		k++;
+		i = j + 1;
+	}
+	return weight;
+}
+void CopyMatrix(int** matr, int** copy_matr, int number_city)
+{
+	for (int i = 0; i < number_city; i++)
+	{
+		for (int j = 0; j < number_city; j++)
+			copy_matr[i][j] = matr[i][j];
 	}
 }
 int main()
 {
 	srand(time(0));
-	int** matr_way_weight, number_city, starting_city, *way, *min_way;
+	int** matr_way_weight, number_city, starting_city, * way, * min_way;
+	int min_element = 0, weight = 0, ix = 0, jx = 0, *way_heuristics, **heuristics_matr_way_weight, *heuristics_min_way;
+	int& i_min = ix, & j_min = jx;
 	std::cout << "enter the number of cities: ";
 	std::cin >> number_city;
 	std::cout << std::endl <<"enter the number of starting city: ";
@@ -112,14 +215,49 @@ int main()
 	for (int i = 0; i < number_city; i++)//зануляем диагонали матрицы
 		matr_way_weight[i][i] = 0;
 	OutputMatrix(matr_way_weight, number_city);
+
+	//create matrix weight for Heuristics(copy matrix for exact algorithm)
+	heuristics_matr_way_weight = new int* [number_city];//выделяем память под массив указателей
+	for (int i = 0; i < number_city; i++)//выделяем память под каждую "строку"
+		heuristics_matr_way_weight[i] = new int[number_city];
+	CopyMatrix(matr_way_weight, heuristics_matr_way_weight, number_city);
+
 	way = new int[number_city + 1];//создаем массив, в котором будут храниться пути
 	min_way = new int [number_city + 1];
 	SearchOptimalWeight(way, matr_way_weight, number_city, min_way, starting_city);
 
-	std::cout << "minimum weight path ";
+	std::cout << "The exact algorithm: minimum weight path ";
 	OutputMas(min_way, number_city + 1);
-	std::cout << "his weight " << WeightWay(min_way, matr_way_weight, number_city);
+	std::cout << "his weight " << WeightWay(min_way, matr_way_weight, number_city) << std::endl;
 
+	//heuristics
+	heuristics_min_way = new int[number_city + 1];
+	way_heuristics = new int[number_city * 2];//make an array, when we keep way
+	for (int i = 0; i < number_city * 2; i++)//let 's take an array 0
+		way_heuristics[i] = 0;
+	OutputMatrix(heuristics_matr_way_weight, number_city);
+
+	weight = Heuristics(way_heuristics, heuristics_matr_way_weight, number_city, i_min, j_min, min_element, weight, heuristics_min_way);
+
+	//create way
+	/*heuristics_min_way[0] = way_heuristics[0];
+	heuristics_min_way[1] = way_heuristics[1];
+	for (int i = 1, k = 2, j; k <= number_city;)
+	{
+		for (j = 2;j < number_city * 2;j += 2)
+		{
+			if (way_heuristics[j] == way_heuristics[i])
+			{
+				heuristics_min_way[k] = way_heuristics[j + 1];
+				break;
+			}
+		}
+		k++;
+		i = j + 1;
+	}*/
+	std::cout << "Heuristics: ";
+	OutputMas(heuristics_min_way, number_city + 1);
+	std::cout << "Heuristics: weight of min way = " << weight;
 	//удаляем память, выделенную под матрицу
 	for (int i = 0; i < number_city; i++)
 		delete[] matr_way_weight[i];
@@ -127,4 +265,9 @@ int main()
 	//удаляем память, выделенную под массив
 	delete[] way;
 	delete[] min_way;
+	delete[] way_heuristics;
+	for (int i = 0; i < number_city; i++)
+		delete[] heuristics_matr_way_weight[i];
+	delete[] heuristics_matr_way_weight;
+	delete[] heuristics_min_way;
 }
