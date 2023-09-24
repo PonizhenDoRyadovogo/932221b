@@ -1,6 +1,7 @@
 #include <iostream>
 #include <string.h>
 #include <time.h>
+#include<chrono>
 
 void RandomMatrix(int **matr, int m)
 {
@@ -47,7 +48,7 @@ void Swap(int& a, int& b)
 	int x;
 	x = a; a = b; b = x;
 }
-void SearchOptimalWeight(int* way, int** matr, int number_city, int *min_way, int starting_city)
+void SearchOptimalWeight(int* way, int** matr, int number_city, int *min_way, int *max_way, int starting_city)
 {
 	int first_way = 1;
 	for (int k = 1; ; k++)
@@ -67,6 +68,7 @@ void SearchOptimalWeight(int* way, int** matr, int number_city, int *min_way, in
 			/*OutputMas(way, number_city + 1);
 			std::cout << " weight " << WeightWay(way, matr, number_city) << std::endl;*/
 			CopyMas(way, min_way, number_city + 1);//предполагаем, то что наш начальный путь может быть минимальным
+			CopyMas(way, max_way, number_city + 1);//we assume that the initial path is the maximum
 		}
 		int max_i = -1, max_j;
 		for (int i = 1; i < number_city - 1; i++)
@@ -92,6 +94,8 @@ void SearchOptimalWeight(int* way, int** matr, int number_city, int *min_way, in
 		}
 		if (WeightWay(way, matr, number_city) < WeightWay(min_way, matr, number_city))
 			CopyMas(way, min_way, number_city + 1);
+		if(WeightWay(way, matr, number_city) >  WeightWay(max_way, matr, number_city))
+			CopyMas(way, max_way, number_city + 1);
 		//OutputMas(way, number_city + 1);
 		//std::cout << " weight " << WeightWay(way, matr, number_city) << std::endl;
 	}
@@ -135,7 +139,7 @@ bool SearchCycle(int* way, int number_city, int i, int j)
 			k++;
 	}
 	ki2 = ki;
-	for (int b = 0; b < number_city * 2; b++)
+	for (int b = 0; b < number_city * 2; b++)//restoring the return path. if ki2 is equal to way[i] then adding this arc will result in a loop
 	{
 		for (int a = 0; a < (number_city * 2) - 1;a += 2)
 		{
@@ -203,11 +207,12 @@ void CopyMatrix(int** matr, int** copy_matr, int number_city)
 			copy_matr[i][j] = matr[i][j];
 	}
 }
+
 int main()
 {
 	srand(time(0));
-	int** matr_way_weight, number_city, starting_city, * way, * min_way;
-	int min_element = 0, weight = 0, ix = 0, jx = 0, *way_heuristics, **heuristics_matr_way_weight, *heuristics_min_way;
+	int** matr_way_weight, number_city, starting_city, * way, * min_way, *max_way, min_weight_exact, max_way_exact;
+	int min_element = 0, heuristics_weight = 0, ix = 0, jx = 0, *way_heuristics, **heuristics_matr_way_weight, *heuristics_min_way;
 	int& i_min = ix, & j_min = jx;
 	std::cout << "enter the number of cities: ";
 	std::cin >> number_city;
@@ -230,11 +235,22 @@ int main()
 
 	way = new int[number_city + 1];//создаем массив, в котором будут храниться пути
 	min_way = new int [number_city + 1];
-	SearchOptimalWeight(way, matr_way_weight, number_city, min_way, starting_city);
+	max_way = new int[number_city + 1];
+
+	auto start = std::chrono::high_resolution_clock::now();
+	SearchOptimalWeight(way, matr_way_weight, number_city, min_way, max_way,starting_city);
+	auto end = std::chrono::high_resolution_clock::now();
+	float time = std::chrono::duration_cast<std::chrono::nanoseconds>(end - start).count();
+	min_weight_exact = WeightWay(min_way, matr_way_weight, number_city);
+	max_way_exact = WeightWay(max_way, matr_way_weight, number_city);
 
 	std::cout << "The exact algorithm: minimum weight path ";
 	OutputMas(min_way, number_city + 1);
-	std::cout << "his weight " << WeightWay(min_way, matr_way_weight, number_city) << std::endl;
+	std::cout << "his minimal weight " << min_weight_exact << std::endl;
+	std::cout << "The exact algorithm: maximal weight path ";
+	OutputMas(max_way, number_city + 1);
+	std::cout << "his maximal weight " <<max_way_exact << std::endl;
+	std::cout << "Working time of the exact algorithm " << time << " nanoseconds" << std::endl;
 
 	//heuristics
 	heuristics_min_way = new int[number_city + 1];
@@ -242,39 +258,34 @@ int main()
 	for (int i = 0; i < number_city * 2; i++)//let 's take an array 0
 		way_heuristics[i] = 0;
 	OutputMatrix(heuristics_matr_way_weight, number_city);
+	start = std::chrono::high_resolution_clock::now();
+	heuristics_weight = Heuristics(way_heuristics, heuristics_matr_way_weight, number_city, i_min, j_min, min_element, heuristics_weight, heuristics_min_way, starting_city);
+	end = std::chrono::high_resolution_clock::now();
+	float time_h = std::chrono::duration_cast<std::chrono::nanoseconds>(end - start).count();
 
-	weight = Heuristics(way_heuristics, heuristics_matr_way_weight, number_city, i_min, j_min, min_element, weight, heuristics_min_way, starting_city);
-	std::cout <<" \n";
-	OutputMas(way_heuristics, number_city * 2);
-	//create way
-	/*heuristics_min_way[0] = way_heuristics[0];
-	heuristics_min_way[1] = way_heuristics[1];
-	for (int i = 1, k = 2, j; k <= number_city;)
-	{
-		for (j = 2;j < number_city * 2;j += 2)
-		{
-			if (way_heuristics[j] == way_heuristics[i])
-			{
-				heuristics_min_way[k] = way_heuristics[j + 1];
-				break;
-			}
-		}
-		k++;
-		i = j + 1;
-	}*/
 	std::cout << "Heuristics: ";
 	OutputMas(heuristics_min_way, number_city + 1);
-	std::cout << "Heuristics: weight of min way = " << weight;
+	std::cout << "his weight of min way = " << heuristics_weight<<std::endl;
+	std::cout << "Working time of heuristics " << time_h << " nanoseconds" << std::endl;
+
+	//quality
+	float percent_quality = 100 - ((float)(heuristics_weight - min_weight_exact) / (float)(max_way_exact - min_weight_exact)) * 100;
+	std::cout << "The quality of the heuristic algorithm " << percent_quality << "%" << std::endl;
+	//speed
+	float percent_speed = (time / time_h) * 100;
+	std::cout << "The speed of the heuristic algorithm " << percent_speed << "%" << std::endl;
+
 	//удаляем память, выделенную под матрицу
 	for (int i = 0; i < number_city; i++)
 		delete[] matr_way_weight[i];
 	delete[] matr_way_weight;
+	for (int i = 0; i < number_city; i++)
+		delete[] heuristics_matr_way_weight[i];
+	delete[] heuristics_matr_way_weight;
 	//удаляем память, выделенную под массив
 	delete[] way;
 	delete[] min_way;
 	delete[] way_heuristics;
-	for (int i = 0; i < number_city; i++)
-		delete[] heuristics_matr_way_weight[i];
-	delete[] heuristics_matr_way_weight;
 	delete[] heuristics_min_way;
+	delete[] max_way;
 }
