@@ -115,7 +115,6 @@ int MinimalElement(int** matr, int number_city, int& i_min, int& j_min)
 }
 void TransformMatrix(int** matr, int i_min, int j_min, int number_city)
 {
-	matr[j_min][i_min] = 0;//let's go on a spree the way back
 	for (int i = 0, j = 0;i < number_city && j < number_city;i++, j++)
 	{
 		matr[i_min][j] = 0;
@@ -125,20 +124,34 @@ void TransformMatrix(int** matr, int i_min, int j_min, int number_city)
 bool SearchCycle(int* way, int number_city, int i, int j)
 {
 	//we are looking for matching elements and if they are linked to the same element that this arc forms a cycle
-	int ki = 0, kj = -1;
+	int ki = -2, kj = -1, k = 0, ki2;
 	for (int i_way = 0, j_way = 1; i_way < (number_city * 2) - 1 && j_way < number_city * 2;i_way += 2, j_way += 2)
 	{
 		if (way[i_way] == way[j])
 			ki = way[i_way + 1];
 		if (way[j_way] == way[i])
 			kj = way[j_way - 1];
+		if (way[i_way] == way[j] && way[j_way] == way[i])//обратный путь
+			k++;
 	}
-	if (ki == kj)
+	ki2 = ki;
+	for (int b = 0; b < number_city * 2; b++)
+	{
+		for (int a = 0; a < (number_city * 2) - 1;a += 2)
+		{
+			if (way[a] == ki2 && a != i)
+			{
+				ki2 = way[a + 1];
+				break;
+			}
+		}
+	}
+	if (ki == kj || k != 0 || ki2 == way[i])
 		return true;
 	else
 		return false;
 }
-int Heuristics(int* way, int **matr_way_weight, int number_city, int &i_min, int &j_min, int min_element, int weight, int *heuristics_min_way)
+int Heuristics(int* way, int **matr_way_weight, int number_city, int &i_min, int &j_min, int min_element, int weight, int *heuristics_min_way, int starting_city)
 {
 	for (int i = 0, j = 1, k = 1;;)//подсчет веса
 	{
@@ -172,20 +185,13 @@ int Heuristics(int* way, int **matr_way_weight, int number_city, int &i_min, int
 			j += 2;
 		}
 	}
-	heuristics_min_way[0] = way[0];
-	heuristics_min_way[1] = way[1];
-	for (int i = 1, k = 2, j; k <= number_city;)
+	int k = 0, i;
+	for (int j = 0; j < number_city + 1; j++)
 	{
-		for (j = 2;j < number_city * 2;j += 2)
-		{
-			if (way[j] == way[i])
-			{
-				heuristics_min_way[k] = way[j + 1];
-				break;
-			}
-		}
-		k++;
-		i = j + 1;
+		for (i = 0; way[i] != starting_city; i += 2);
+
+		heuristics_min_way[k++] = way[i];
+		starting_city = way[i + 1];
 	}
 	return weight;
 }
@@ -237,8 +243,9 @@ int main()
 		way_heuristics[i] = 0;
 	OutputMatrix(heuristics_matr_way_weight, number_city);
 
-	weight = Heuristics(way_heuristics, heuristics_matr_way_weight, number_city, i_min, j_min, min_element, weight, heuristics_min_way);
-
+	weight = Heuristics(way_heuristics, heuristics_matr_way_weight, number_city, i_min, j_min, min_element, weight, heuristics_min_way, starting_city);
+	std::cout <<" \n";
+	OutputMas(way_heuristics, number_city * 2);
 	//create way
 	/*heuristics_min_way[0] = way_heuristics[0];
 	heuristics_min_way[1] = way_heuristics[1];
