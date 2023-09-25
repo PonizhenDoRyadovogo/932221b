@@ -28,6 +28,11 @@ Fraction Fraction::Multipliction(const Fraction &k)const
 }
 Fraction Fraction::Division(const Fraction &k)const
 {
+	if (k.m_numerator == 0)
+	{
+		std::cerr << "the division operation is not possible because the numerator is 0. Result will be second farction"<<std::endl;
+		return k;
+	}
 	Fraction res;
 	res.m_numerator = m_numerator * k.m_denominator;
 	res.m_denominator = m_denominator * k.m_numerator;
@@ -86,12 +91,89 @@ void Fraction::setDenominator(int value)
 		m_denominator = value;
 	}
 }
-bool Fraction:: operator == (const Fraction other)
+int HCF(int numerator, int denominator)//algorithm's Evklid
+{
+	if (numerator == 0)
+		return 1;
+	while (numerator != denominator)
+	{
+		if (numerator > denominator)
+			numerator -= denominator;
+		else
+			denominator -= numerator;
+	}
+	return numerator;
+}
+void Fraction::Reduce()
+{
+	int hcf = HCF(m_numerator, m_denominator);
+	m_numerator = m_numerator / hcf;
+	m_denominator = m_denominator / hcf;
+}
+bool Fraction:: operator == (const Fraction other) const
 {
 	return(m_numerator == other.m_numerator && m_denominator == other.m_denominator);
 }
-bool Fraction:: operator != (const Fraction other)
+bool Fraction:: operator != (const Fraction other) const
 {
 	//сокращаем дублирование кода за счет уже реализованных методов
 	return !operator == (other);
+}
+bool Fraction:: operator < (const Fraction other) const
+{
+	return ((m_numerator * other.m_denominator) < (other.m_numerator * m_denominator));
+}
+bool Fraction:: operator > (const Fraction other) const
+{
+	return ((m_numerator * other.m_denominator) > (other.m_numerator * m_denominator));
+}
+Fraction Fraction::operator +(const Fraction other) const
+{
+	return Add(other);
+}
+Fraction Fraction::operator -(const Fraction other)const
+{
+	return Subtractions(other);
+}
+Fraction Fraction::operator *(const Fraction other)const
+{
+	return Multipliction(other);
+}
+Fraction Fraction::operator /(const Fraction other)const
+{
+	return Division(other);
+}
+Fraction Fraction::FlippingFraction()//own method
+{
+	if (m_numerator == 0)
+	{
+		std::cerr << "Method FlippingFraction cannot be executed." << std::endl;
+		return *this;
+	}
+	else
+	{
+		int temp = m_numerator;
+		m_numerator = m_denominator;
+		m_denominator = temp;
+		return *this;
+	}
+}
+void Fraction ::Fraction::Input()
+{
+	std::cout << "Enter the numerator : ";
+	std::cin >> m_numerator;
+
+	std::cout << "Enter the denominator : ";
+	std::cin >> m_denominator;
+
+	while (m_denominator == 0) {
+		std::cout << ("Denominator can`t be zero! Please, enter a vallid denominator: ");
+		std::cin >> m_denominator;
+	}
+}
+Fraction& Fraction:: operator +=(const Fraction &other)//own method
+{
+	m_numerator = m_numerator * other.m_denominator + other.m_numerator * m_denominator;
+	m_denominator = m_denominator * other.m_denominator;
+	return *this;
 }

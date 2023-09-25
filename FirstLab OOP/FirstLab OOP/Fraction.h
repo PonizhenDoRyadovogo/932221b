@@ -14,9 +14,19 @@ public:
 	int getDenominator()const;
 	void setNumerator(const int value);
 	void setDenominator(int value);
+	void Reduce();
 	//не сокращает дроби при сравнении, если программисту это нужно, то он может вызвать reduce() перед использованием данного метода 
-	bool operator == (const Fraction other);
-	bool operator != (const Fraction other);
+	bool operator == (const Fraction other) const;
+	bool operator != (const Fraction other)const;
+	bool operator < (const Fraction other)const;
+	bool operator > (const Fraction other)const;
+	Fraction operator +(const Fraction other)const;
+	Fraction operator -(const Fraction other)const;
+	Fraction operator *(const Fraction other)const;
+	Fraction operator /(const Fraction other)const;
+	Fraction FlippingFraction();
+	void Input();
+	Fraction& operator +=(const Fraction& other);
 private:
 	//приватные переменные принято начинать с префикса m_
 	int m_numerator = 0;//вторая очередь инициализации
