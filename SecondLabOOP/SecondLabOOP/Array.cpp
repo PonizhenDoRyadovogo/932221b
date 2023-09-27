@@ -20,6 +20,15 @@ Array::Array(const int size, const int value)
 	}
 
 }
+Array::Array(const Array& other)
+	:m_size(other.m_size)
+{
+	m_array = new int[m_size];
+	for (int i = 0; i < m_size; i++)
+	{
+		m_array[i] = other.m_array[i];
+	}
+}
 Array:: ~Array()
 {
 	delete[] m_array;
@@ -33,8 +42,35 @@ void Array::Print()const
 	}
 	std::cout << m_array[m_size - 1] << "]\n";
 }
-int Array:: operator [](const int index)
+const int & Array:: operator [](const int index) const
 {
 	assert(index >= 0 && index < m_size);
 	return m_array[index];
+}
+int & Array:: operator [](const int index)
+{
+	assert(index >= 0 && index < m_size);
+	return m_array[index];
+}
+int Array:: size() const
+{
+	return m_size;
+}
+Array& Array::operator = (const Array& other)//a = a
+{
+	if (this == &other)
+	{
+		return *this;
+	}
+	if (m_size != other.m_size)
+	{
+		m_size = other.m_size;
+		delete[] m_array;
+		m_array = new int[m_size];
+	}
+	for (int i = 0; i < m_size;i++)
+	{
+		m_array[i] = other.m_array[i];
+	}
+	return *this;
 }
