@@ -74,3 +74,30 @@ Array& Array::operator = (const Array& other)//a = a
 	}
 	return *this;
 }
+//если внутри класса мы работаем с кучей, то обязательно нужны свои = и конструкторы копирования
+Array Array:: operator +(const Array& other) const
+{
+	Array res(m_size + other.m_size);
+	for (int i = 0; i < m_size; ++i)
+	{
+		res.m_array[i] = m_array[i];
+	}
+	for (int i = 0; i < other.m_size; ++i)
+	{
+		res.m_array[m_size + i] = other.m_array[i];
+	}
+	return res;
+}
+
+void Array::swap(Array& other)
+{
+	std::swap(m_size, other.m_size);
+	std::swap(m_array, other.m_array);
+}
+
+Array & Array:: operator +=(const Array& other)
+{
+	Array tmp = *this + other;//работает конструктор копирования
+	this->swap(tmp);
+	return *this;
+}

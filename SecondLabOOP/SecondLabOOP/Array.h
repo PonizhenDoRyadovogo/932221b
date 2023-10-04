@@ -10,6 +10,9 @@ public:
 	int& operator [](const int index);
 	int size() const;
 	Array &operator = (const Array& other);
+	Array operator +(const Array& other)const;
+	void swap(Array& other);
+	Array& operator +=(const Array& other);
 private:
 	int* m_array = nullptr;
 	int m_size = 0;
