@@ -35,12 +35,7 @@ Array:: ~Array()
 }
 void Array::Print()const
 {
-	std::cout << "[";
-	for (int i = 0; i < m_size - 1; i++)
-	{
-		std::cout << m_array[i] << ",";
-	}
-	std::cout << m_array[m_size - 1] << "]\n";
+	std::cout << *this;
 }
 const int & Array:: operator [](const int index) const
 {
@@ -58,6 +53,13 @@ int Array:: size() const
 }
 Array& Array::operator = (const Array& other)//a = a
 {
+	/*
+	Array& Array::operator = (Array& other)
+	{
+	swap (other);
+	return *this;//как вариант с импользованием swap
+	}
+	*/
 	if (this == &other)
 	{
 		return *this;
@@ -101,3 +103,24 @@ Array & Array:: operator +=(const Array& other)
 	this->swap(tmp);
 	return *this;
 }
+
+std::ostream& operator<<(std::ostream& stream, const Array& arr)
+{
+	stream << "[";
+	for (int i = 0; i < arr.size() - 1; ++i)
+	{
+		std::cout << arr[i] << ",";
+	}
+	std::cout << arr[arr.size() - 1] << "]\n";
+	return stream;
+}
+
+std::istream& operator>>(std::istream& stream, Array& arr)
+{
+	for (int i = 0; i < arr.size() - 1; ++i)
+	{
+		stream >> arr[i];
+	}
+	return stream;
+}
+

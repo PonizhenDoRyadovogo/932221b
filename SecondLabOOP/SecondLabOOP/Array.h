@@ -1,4 +1,5 @@
 #pragma once
+#include<iostream>
 class Array
 {
 public:
@@ -18,3 +19,5 @@ private:
 	int m_size = 0;
 };
 
+std::ostream& operator<<(std::ostream& stream, const Array& arr);
+std::istream& operator>>(std::istream& stream, Array& arr);
