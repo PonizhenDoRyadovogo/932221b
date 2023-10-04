@@ -13,6 +13,7 @@ public:
 	Array &operator = (const Array& other);
 	Array operator +(const Array& other)const;
 	void swap(Array& other);
+	void resize(int size);
 	Array& operator +=(const Array& other);
 private:
 	int* m_array = nullptr;

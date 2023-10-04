@@ -96,7 +96,21 @@ void Array::swap(Array& other)
 	std::swap(m_size, other.m_size);
 	std::swap(m_array, other.m_array);
 }
-
+void Array::resize(int size)
+{
+	if (size < 0)
+	{
+		std::cerr << "Array::Array: size is negative, invert... \n";
+		m_size = -size;
+	}
+	Array res(size);
+	int count = std::min(m_size, size);
+	for (int i = 0; i < count; ++i)
+	{
+		res.m_array[i] = m_array[i];
+	}
+	res.swap(*this);
+}
 Array & Array:: operator +=(const Array& other)
 {
 	Array tmp = *this + other;//работает конструктор копирования
