@@ -102,7 +102,7 @@ void SearchOptimalWeight(int* way, int** matr, int number_city, int *min_way, in
 }
 int MinimalElement(int** matr, int number_city, int& i_min, int& j_min)
 {
-	int min_element = 1000;
+	int min_element = INT_MAX;
 	for (int i = 0;i < number_city;i++)
 	{
 		for (int j = 0;j < number_city;j++)
@@ -160,7 +160,7 @@ int Heuristics(int* way, int **matr_way_weight, int number_city, int &i_min, int
 	for (int i = 0, j = 1, k = 1;;)//подсчет веса
 	{
 		min_element = MinimalElement(matr_way_weight, number_city, i_min, j_min);
-		if (min_element == 1000)
+		if (min_element == INT_MAX)
 			break;
 		way[i] = i_min + 1;
 		way[j] = j_min + 1;
