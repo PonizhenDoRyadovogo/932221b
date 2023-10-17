@@ -1,6 +1,7 @@
 #ifndef ARRAY_TEMPLATE_LABS
 #define ARRAY_TEMPLATE_LABS
 #include"Array.h"
+#include<algorithm>
 template <typename ItemType>
 Array<ItemType>::Array(const int size, const ItemType& value)
 {
@@ -34,7 +35,7 @@ Array<ItemType>::Array(const Array& other)
 }
 
 template <typename ItemType>
-Array<ItemType>::Array(const Array&& other)
+Array<ItemType>::Array(Array&& other)
 {
 	swap(other);
 }
@@ -72,15 +73,15 @@ int Array<ItemType>::size() const
 }
 
 template <typename ItemType>
+Array<ItemType>& Array<ItemType>::operator = (Array&& other)
+{
+	swap(other);
+	return *this;//как вариант с импользованием swap
+}
+
+template <typename ItemType>
 Array<ItemType>& Array<ItemType>::operator = (const Array& other)//a = a
 {
-	/*
-	Array& Array::operator = (Array& other)
-	{
-	swap (other);
-	return *this;//как вариант с импользованием swap
-	}
-	*/
 	if (this == &other)
 	{
 		return *this;
@@ -100,16 +101,17 @@ Array<ItemType>& Array<ItemType>::operator = (const Array& other)//a = a
 //если внутри класса мы работаем с кучей, то обязательно нужны свои = и конструкторы копирования
 
 template <typename ItemType>
-Array<ItemType> Array<ItemType>:: operator +(const Array& other) const
+Array<ItemType> Array<ItemType>:: operator +(const Array& other)const
 {
 	Array res(m_size + other.m_size);
-	for (int i = 0; i < m_size; ++i)
-	{
-		res.m_array[i] = m_array[i];
-	}
-	for (int i = 0; i < other.m_size; ++i)
-	{
-		res.m_array[m_size + i] = other.m_array[i];
+	for (int i = 0, j = 0; i < res.m_size; i++) {
+		if (i < m_size) {
+			res[i] = m_array[i];
+		}
+		else {
+			res[i] = other.m_array[j];
+			j++;
+		}
 	}
 	return res;
 }
@@ -142,21 +144,151 @@ template <typename ItemType>
 Array<ItemType>& Array<ItemType>:: operator +=(const Array& other)
 {
 	Array tmp = *this + other;//работает конструктор копирования
-	this->swap(tmp);
+	swap(tmp);
 	return *this;
 }
 
 template <typename ItemType>
-int Array<ItemType>::Find(const Array& other, const int d)
+int Array<ItemType>::Find(const ItemType value)
 {
 	for (int i = 0; i < m_size; ++i)
 	{
-		if (m_array[i] == d)
+		if (m_array[i] == value)
 		{
 			return i;//if match are found, then return index element
 		}
 	}
 	return -1;//if no matches are found, then return -1
+}
+
+template <typename ItemType>
+Array<ItemType> Array<ItemType>:: operator +(const ItemType value)
+{
+	Array tmp_Array(m_size + 1, 0);
+	for (int i = 0; i < m_size; ++i)
+	{
+		tmp_Array.m_array[i] = m_array[i];
+	}
+	tmp_Array.m_array[m_size] = value;
+	return tmp_Array;
+}
+
+template <typename ItemType>
+Array<ItemType> &Array<ItemType>::operator+=(const ItemType value)
+{
+	*this = *this + value;
+	return *this;
+}
+
+template <typename ItemType>
+bool Array<ItemType>::operator ==(const Array& other)const
+{
+	if (this == &other)
+	{
+		return true;
+	}
+	if (m_size != other.m_size)
+	{
+		return false;
+	}
+	else
+	{
+		for (int i = 0; i < m_size; ++i)
+			if (m_array[i] != other.m_array[i])
+				return false;
+	}
+	return true;
+}
+
+template <typename ItemType>
+bool Array<ItemType>:: operator !=(const Array& other)const
+{
+	return !operator==(other);
+}
+
+template <typename ItemType>
+void Array<ItemType>::RandomArray(const ItemType left_lim, const ItemType right_lim)
+{
+	for (int i = 0; i < m_size; i++)
+		m_array[i] = rand() % (right_lim - left_lim + 1) + left_lim;
+}
+template <typename ItemType>
+bool Array<ItemType>::InsertIndex(int index, const ItemType value)
+{
+	if (index >= m_size || index<0)
+		return false;
+	int i;
+	this->resize(m_size + 1);
+	for (i = m_size - 2; i >= index; i--)
+		m_array[i + 1] = m_array[i];
+	m_array[i + 1] = value;
+	return true;
+}
+
+template <typename ItemType>
+bool Array<ItemType>::DeleteOffIndex(int index)
+{
+	if (index >= m_size || index < 0)
+		return false;
+	int i;
+	for (i = index; i < m_size - 1;i++)
+		m_array[i] = m_array[i + 1];
+	this->resize(m_size - 1);
+	return true;
+}
+
+template <typename ItemType>
+bool Array<ItemType>::DeleteOffValue(const ItemType value)
+{
+	int index = this->Find(value);
+	if (index == -1)
+		return false;
+	else
+		this->DeleteOffIndex(index);
+	return true;
+}
+
+template <typename ItemType>
+bool Array<ItemType>::DeleteOffValueAll(const ItemType value)
+{
+	int index = this->Find(value);
+	if (index == -1)
+		return false;
+	else
+	{
+		while (index >= 0)
+		{
+			this->DeleteOffIndex(index);
+			index = this->Find(value);
+		}
+	}
+	return true;
+}
+
+template <typename ItemType>
+ItemType Array<ItemType>::SearchMax()
+{
+	int i = 0;
+	ItemType max = m_array[i];
+	for (i = 1; i < m_size; i++)
+	{
+		if (m_array[i] > max)
+			max = m_array[i];
+	}
+	return max;
+}
+
+template <typename ItemType>
+ItemType Array<ItemType>::SearchMin()
+{
+	int i = 0;
+	ItemType min = m_array[i];
+	for (i = 1; i < m_size; i++)
+	{
+		if (m_array[i] < min)
+			min = m_array[i];
+	}
+	return min;
 }
 
 template <typename ItemType>

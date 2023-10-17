@@ -5,20 +5,36 @@ template <typename ItemType>
 class Array
 {
 public:
+	class Iterator;
+public:
 	Array(const int size = 10, const ItemType &value = ItemType());
 	Array(const Array& other);
-	Array(const Array&& other);
+	Array(Array&& other);
 	~Array();
 	void Print()const;
 	const int& operator [](const int index) const;
 	int& operator [](const int index);
 	int size() const;
+	Array& operator = (Array&& other);
 	Array &operator = (const Array& other);
 	Array operator +(const Array& other)const;
 	void swap(Array& other);
 	void resize(int size);
 	Array& operator +=(const Array& other);
-	int Find(const Array& other, const int d);
+	int Find(const ItemType value);
+	Array operator +(const ItemType value);
+	Array& operator+=(const ItemType value);
+	bool operator ==(const Array& other)const;
+	bool operator !=(const Array& other)const;
+	void RandomArray(const ItemType left_lim, const ItemType right_lim);
+	bool InsertIndex(int index, const ItemType value);
+	bool DeleteOffIndex(int index);
+	bool DeleteOffValue(const ItemType value);
+	bool DeleteOffValueAll(const ItemType value);
+	ItemType SearchMax();
+	ItemType SearchMin();
+
+
 private:
 	int* m_array = nullptr;
 	int m_size = 0;
