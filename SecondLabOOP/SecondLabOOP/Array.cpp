@@ -139,7 +139,6 @@ void Array<ItemType>::Resize(int size)
 	}
 	res.Swap(*this);
 }
-
 template <typename ItemType>
 Array<ItemType>& Array<ItemType>:: operator +=(const Array& other)
 {
@@ -307,5 +306,125 @@ std::istream& operator>>(std::istream& stream, Array<ItemType>& arr)
 		stream >> arr[i];
 	}
 	return stream;
+}
+
+template <typename ItemType>
+template<typename IT, typename AT>
+Array<ItemType>::Iterator<IT, AT>::Iterator(AT* array, int pos)
+	:m_array(array),
+	m_pos(pos)
+{
+}
+
+template <typename ItemType>
+template<typename IT, typename AT>
+IT& Array<ItemType>::Iterator<IT, AT>::operator*()
+{
+	return m_array->operator[](m_pos);
+}
+
+template <typename ItemType>
+template<typename IT, typename AT>
+Array<ItemType>::Iterator<IT, AT>& Array<ItemType>::Iterator<IT, AT>::operator++()
+{
+	++m_pos;
+	return *this;
+}
+
+template <typename ItemType>
+template<typename IT, typename AT>
+Array<ItemType>::Iterator<IT, AT>& Array<ItemType>::Iterator<IT, AT>::operator--()
+{
+	--m_pos;
+	return *this;
+}
+
+template <typename ItemType>
+template<typename IT, typename AT>
+Array<ItemType>::Iterator<IT, AT> Array<ItemType>::Iterator<IT, AT>::operator++(int)
+{
+	auto old(*this);
+	++m_pos;
+	return old;
+}
+
+template <typename ItemType>
+template<typename IT, typename AT>
+Array<ItemType>::Iterator<IT, AT> Array<ItemType>::Iterator<IT, AT>::operator--(int)
+{
+	auto old(*this);
+	--m_pos;
+	return old;
+}
+
+template <typename ItemType>
+template<typename IT, typename AT>
+int Array<ItemType>::Iterator<IT, AT>::Position()
+{
+	return m_pos;
+}
+
+template <typename ItemType>
+template<typename IT, typename AT>
+bool Array<ItemType>::Iterator<IT, AT>::operator ==(const Iterator& other)const
+{
+	assert(m_array == other.m_array);
+	return (m_array == other.m_array && m_pos == other.m_pos);
+}
+
+template <typename ItemType>
+template<typename IT, typename AT>
+bool Array<ItemType>::Iterator<IT, AT>::operator!=(const Iterator& other)const
+{
+	return!(operator == (other));
+}
+
+template <typename ItemType>typename
+Array<ItemType>:: TmpIterator Array<ItemType>::Begin()
+{
+	return TmpIterator(this, 0);
+}
+
+template <typename ItemType>typename
+Array<ItemType>::TmpIterator Array<ItemType>::End()
+{
+	return TmpIterator(this, m_size);
+}
+
+template<typename ItemType>typename
+Array<ItemType>::TmpConstIterator Array<ItemType>::Begin()const
+{
+	return TmpConstIterator(this, 0);
+}
+
+template<typename ItemType>typename
+Array<ItemType>::TmpConstIterator Array<ItemType>::End()const
+{
+	return TmpConstIterator(this, m_size);
+}
+
+template<typename ItemType>typename
+bool Array<ItemType>::InsertIter(TmpIterator& iter, const ItemType& value)
+{
+	--iter;
+	int index = iter.Position();
+	if (index < 0)
+		return false;
+	if (index == m_size - 1)//if this is the last index of the array, then just add a number to the end of the array
+	{
+		*this += value;//adding a value to the end of the array
+		return true;
+	}
+	else
+	{
+		return this->InsertIndex(index, value);
+	}
+}
+
+template <typename ItemType>
+template<typename IT, typename AT>
+IT& Array<ItemType>::Iterator<IT, AT>::operator[](const int value)
+{
+	return*(operator+(value));
 }
 #endif

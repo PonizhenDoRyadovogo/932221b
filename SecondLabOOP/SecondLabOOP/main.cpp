@@ -68,7 +68,7 @@ int main()
 	std::cout << "Random arr4 = " << arr4<<std::endl;
 	bubbleSort(arr4);
 	std::cout << "Sorted arr4 = " << arr4 << std::endl;
-	if (arr4.InsertIndex(3, 100))
+	if (arr4.InsertIndex(9, 100))
 		std::cout <<"Insert off index: arr4 = " << arr4<< std::endl;
 	else
 		std::cout << "Insert off index: index incorrect" << std::endl;
@@ -88,6 +88,19 @@ int main()
 	std::cout << "Max element off arr2: " << arr2.SearchMax()<<std::endl;
 	std::cout << "Min element off arr2: " << arr2.SearchMin() << std::endl;
 
+	Array<int>::TmpIterator iter_b = arr4.Begin();
+	std::cout << "Iterator to the beginning of the arr4: " << *iter_b << std::endl;
+	Array<int>::TmpIterator iter_end = arr4.End();
+	std::cout << "Iterator to the ending of the arr4: " << *(--iter_end) << std::endl;
+	if (iter_b == iter_end)
+		std::cout << "Iterators are equal" << std::endl;
+	else
+		std::cout << "Iterators are not equal" << std::endl;
+	iter_b = arr5.End();
+	if (arr5.InsertIter(iter_b, 25))
+		std::cout << "Insert of iterator: arr5 = " << arr5 << std::endl;
+	else
+		std::cout << "Insert of iterator: false"<<std::endl;
 }
 
 
