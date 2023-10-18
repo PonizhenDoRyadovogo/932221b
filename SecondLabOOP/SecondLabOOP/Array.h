@@ -12,27 +12,26 @@ public:
 	Array(Array&& other);
 	~Array();
 	void Print()const;
-	const int& operator [](const int index) const;
-	int& operator [](const int index);
-	int size() const;
+	const ItemType& operator [](const int index) const;
+	ItemType& operator [](const int index);
+	int Size() const;
 	Array& operator = (Array&& other);
 	Array &operator = (const Array& other);
 	Array operator +(const Array& other)const;
-	void swap(Array& other);
-	void resize(int size);
+	void Swap(Array& other);
+	void Resize(int size);
 	Array& operator +=(const Array& other);
-	int Find(const ItemType value);
-	Array operator +(const ItemType value);
-	Array& operator+=(const ItemType value);
+	int Find(const ItemType &value)const;
+	Array operator +(const ItemType &value)const;
+	Array& operator+=(const ItemType &value);
 	bool operator ==(const Array& other)const;
 	bool operator !=(const Array& other)const;
-	void RandomArray(const ItemType left_lim, const ItemType right_lim);
-	bool InsertIndex(int index, const ItemType value);
+	bool InsertIndex(int index, const ItemType &value);
 	bool DeleteOffIndex(int index);
-	bool DeleteOffValue(const ItemType value);
-	bool DeleteOffValueAll(const ItemType value);
-	ItemType SearchMax();
-	ItemType SearchMin();
+	bool DeleteOffValue(const ItemType &value);
+	bool DeleteOffValueAll(const ItemType &value);
+	ItemType SearchMax()const;
+	ItemType SearchMin()const;
 
 
 private:

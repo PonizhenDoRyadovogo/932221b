@@ -37,7 +37,7 @@ Array<ItemType>::Array(const Array& other)
 template <typename ItemType>
 Array<ItemType>::Array(Array&& other)
 {
-	swap(other);
+	Swap(other);
 }
 
 template <typename ItemType>
@@ -53,21 +53,21 @@ void Array<ItemType>::Print()const
 }
 
 template <typename ItemType>
-const int& Array<ItemType>:: operator [](const int index) const
+const ItemType& Array<ItemType>:: operator [](const int index) const
 {
 	assert(index >= 0 && index < m_size);
 	return m_array[index];
 }
 
 template <typename ItemType>
-int& Array<ItemType>:: operator [](const int index)
+ItemType& Array<ItemType>:: operator [](const int index)
 {
 	assert(index >= 0 && index < m_size);
 	return m_array[index];
 }
 
 template <typename ItemType>
-int Array<ItemType>::size() const
+int Array<ItemType>::Size() const
 {
 	return m_size;
 }
@@ -75,7 +75,7 @@ int Array<ItemType>::size() const
 template <typename ItemType>
 Array<ItemType>& Array<ItemType>::operator = (Array&& other)
 {
-	swap(other);
+	Swap(other);
 	return *this;//как вариант с импользованием swap
 }
 
@@ -117,14 +117,14 @@ Array<ItemType> Array<ItemType>:: operator +(const Array& other)const
 }
 
 template <typename ItemType>
-void Array<ItemType>::swap(Array& other)
+void Array<ItemType>::Swap(Array& other)
 {
 	std::swap(m_size, other.m_size);
 	std::swap(m_array, other.m_array);
 }
 
 template <typename ItemType>
-void Array<ItemType>::resize(int size)
+void Array<ItemType>::Resize(int size)
 {
 	if (size < 0)
 	{
@@ -137,19 +137,19 @@ void Array<ItemType>::resize(int size)
 	{
 		res.m_array[i] = m_array[i];
 	}
-	res.swap(*this);
+	res.Swap(*this);
 }
 
 template <typename ItemType>
 Array<ItemType>& Array<ItemType>:: operator +=(const Array& other)
 {
 	Array tmp = *this + other;//работает конструктор копирования
-	swap(tmp);
+	Swap(tmp);
 	return *this;
 }
 
 template <typename ItemType>
-int Array<ItemType>::Find(const ItemType value)
+int Array<ItemType>::Find(const ItemType& value)const
 {
 	for (int i = 0; i < m_size; ++i)
 	{
@@ -162,7 +162,7 @@ int Array<ItemType>::Find(const ItemType value)
 }
 
 template <typename ItemType>
-Array<ItemType> Array<ItemType>:: operator +(const ItemType value)
+Array<ItemType> Array<ItemType>:: operator +(const ItemType &value)const
 {
 	Array tmp_Array(m_size + 1, 0);
 	for (int i = 0; i < m_size; ++i)
@@ -174,7 +174,7 @@ Array<ItemType> Array<ItemType>:: operator +(const ItemType value)
 }
 
 template <typename ItemType>
-Array<ItemType> &Array<ItemType>::operator+=(const ItemType value)
+Array<ItemType> &Array<ItemType>::operator+=(const ItemType &value)
 {
 	*this = *this + value;
 	return *this;
@@ -207,18 +207,12 @@ bool Array<ItemType>:: operator !=(const Array& other)const
 }
 
 template <typename ItemType>
-void Array<ItemType>::RandomArray(const ItemType left_lim, const ItemType right_lim)
-{
-	for (int i = 0; i < m_size; i++)
-		m_array[i] = rand() % (right_lim - left_lim + 1) + left_lim;
-}
-template <typename ItemType>
-bool Array<ItemType>::InsertIndex(int index, const ItemType value)
+bool Array<ItemType>::InsertIndex(int index, const ItemType& value)
 {
 	if (index >= m_size || index<0)
 		return false;
 	int i;
-	this->resize(m_size + 1);
+	this->Resize(m_size + 1);
 	for (i = m_size - 2; i >= index; i--)
 		m_array[i + 1] = m_array[i];
 	m_array[i + 1] = value;
@@ -233,12 +227,12 @@ bool Array<ItemType>::DeleteOffIndex(int index)
 	int i;
 	for (i = index; i < m_size - 1;i++)
 		m_array[i] = m_array[i + 1];
-	this->resize(m_size - 1);
+	this->Resize(m_size - 1);
 	return true;
 }
 
 template <typename ItemType>
-bool Array<ItemType>::DeleteOffValue(const ItemType value)
+bool Array<ItemType>::DeleteOffValue(const ItemType& value)
 {
 	int index = this->Find(value);
 	if (index == -1)
@@ -249,7 +243,7 @@ bool Array<ItemType>::DeleteOffValue(const ItemType value)
 }
 
 template <typename ItemType>
-bool Array<ItemType>::DeleteOffValueAll(const ItemType value)
+bool Array<ItemType>::DeleteOffValueAll(const ItemType &value)
 {
 	int index = this->Find(value);
 	if (index == -1)
@@ -266,8 +260,9 @@ bool Array<ItemType>::DeleteOffValueAll(const ItemType value)
 }
 
 template <typename ItemType>
-ItemType Array<ItemType>::SearchMax()
+ItemType Array<ItemType>::SearchMax()const
 {
+	assert(m_size >= 0);
 	int i = 0;
 	ItemType max = m_array[i];
 	for (i = 1; i < m_size; i++)
@@ -279,8 +274,9 @@ ItemType Array<ItemType>::SearchMax()
 }
 
 template <typename ItemType>
-ItemType Array<ItemType>::SearchMin()
+ItemType Array<ItemType>::SearchMin()const
 {
+	assert(m_size >= 0);
 	int i = 0;
 	ItemType min = m_array[i];
 	for (i = 1; i < m_size; i++)
@@ -295,18 +291,18 @@ template <typename ItemType>
 std::ostream& operator<<(std::ostream& stream, const Array<ItemType>& arr)
 {
 	stream << "[";
-	for (int i = 0; i < arr.size() - 1; ++i)
+	for (int i = 0; i < arr.Size() - 1; ++i)
 	{
 		std::cout << arr[i] << ",";
 	}
-	std::cout << arr[arr.size() - 1] << "]\n";
+	std::cout << arr[arr.Size() - 1] << "]\n";
 	return stream;
 }
 
 template <typename ItemType>
 std::istream& operator>>(std::istream& stream, Array<ItemType>& arr)
 {
-	for (int i = 0; i < arr.size(); ++i)
+	for (int i = 0; i < arr.Size(); ++i)
 	{
 		stream >> arr[i];
 	}

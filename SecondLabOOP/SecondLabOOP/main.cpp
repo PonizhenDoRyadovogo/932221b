@@ -6,24 +6,30 @@ template <typename ItemType>
 double calculateAvg(Array<ItemType> arr)
 {
 	double avg = 0;
-	for (int i = 0; i < arr.size(); ++i)
+	for (int i = 0; i < arr.Size(); ++i)
 	{
 		avg += arr[i];
 	}
-	avg /= arr.size();
+	avg /= arr.Size();
 	return avg;
 }
 
 template <typename ItemType>
 void bubbleSort(Array<ItemType> &arr)
 {
-	int i, j, n = arr.size();
+	int i, j, n = arr.Size();
 	for (i = 0; i < n - 1; i++)
 		for (j = 0; j < n - i - 1; j++)
 			if (arr[j] > arr[j + 1])
 			{
 				std::swap(arr[j], arr[j + 1]);
 			}
+}
+
+void RandomArray(Array<int> &arr,const int left_lim, const int right_lim)
+{
+	for (int i = 0; i < arr.Size(); i++)
+		arr[i] = rand() % (right_lim - left_lim + 1) + left_lim;
 }
 
 int main()
@@ -40,7 +46,7 @@ int main()
 	std::cout << "index element '3' = " << arr.Find(3)<<std::endl;
 	std::cin>> arr2;
 	std::cout << "arr2 = "<< arr2;
-	arr.swap(arr2);
+	arr.Swap(arr2);
 	std::cout << "arr = " << arr;
 	std::cout << "arr2 = " << arr2;
 	arr2 += arr ;
@@ -58,7 +64,7 @@ int main()
 		std::cout << "arr2 != arr3" << std::endl;
 	else
 		std::cout << "arr2 == arr3" << std::endl;
-	arr4.RandomArray(1, 10);
+	RandomArray(arr4, 1, 10);
 	std::cout << "Random arr4 = " << arr4<<std::endl;
 	bubbleSort(arr4);
 	std::cout << "Sorted arr4 = " << arr4 << std::endl;
