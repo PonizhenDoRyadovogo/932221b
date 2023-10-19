@@ -41,6 +41,8 @@ public:
 	TmpConstIterator Begin()const;
 	TmpConstIterator End()const;
 	bool InsertIter(TmpIterator& iter, const ItemType& value);
+	bool DeleteOfIteratorRange(TmpIterator &left, TmpIterator &right);
+	bool DeleteOfIterator(TmpIterator &iter);
 private:
 	int* m_array = nullptr;
 	int m_size = 0;
@@ -67,6 +69,8 @@ public:
 	int Position();
 	bool operator ==(const Iterator& other)const;
 	bool operator !=(const Iterator& other)const;
+	bool operator <=(const Iterator& other)const;
+	bool operator <(const Iterator& other)const;
 	IT& operator[](const int value);
 private:
 	AT *m_array;

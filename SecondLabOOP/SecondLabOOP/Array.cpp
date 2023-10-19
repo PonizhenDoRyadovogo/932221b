@@ -379,6 +379,22 @@ bool Array<ItemType>::Iterator<IT, AT>::operator!=(const Iterator& other)const
 	return!(operator == (other));
 }
 
+template <typename ItemType>
+template<typename IT, typename AT>
+bool Array<ItemType>::Iterator<IT, AT>::operator<=(const Iterator& other)const
+{
+	assert(m_array == other.m_array);
+	return(m_array == other.m_array && m_pos <= other.m_pos);
+}
+
+template <typename ItemType>
+template<typename IT, typename AT>
+bool Array<ItemType>::Iterator<IT, AT>::operator<(const Iterator& other)const
+{
+	assert(m_array == other.m_array);
+	return(m_array == other.m_array && m_pos < other.m_pos);
+}
+
 template <typename ItemType>typename
 Array<ItemType>:: TmpIterator Array<ItemType>::Begin()
 {
@@ -419,6 +435,37 @@ bool Array<ItemType>::InsertIter(TmpIterator& iter, const ItemType& value)
 	{
 		return this->InsertIndex(index, value);
 	}
+}
+
+template<typename ItemType>typename
+bool Array<ItemType>::DeleteOfIteratorRange(TmpIterator &left, TmpIterator &right)
+{
+	if (left.Position() < 0 || left.Position() > right.Position() || right.Position() > m_size)
+		return false;
+	if (right == End())
+		--right;
+	int j = 0;
+	for (;left <= right; --right)
+	{
+		for (typename Array::TmpIterator i = left; i < End(); ++i)
+			m_array[i.Position()] = m_array[i.Position() + 1];
+		j++;
+	}
+	this->Resize(m_size - j);
+	return true;
+}
+
+template<typename ItemType>typename
+bool Array<ItemType>::DeleteOfIterator(TmpIterator &iter)
+{
+	if (iter.Position() < 0 || iter.Position() > m_size)
+		return false;
+	if (iter == End())
+		--iter;
+	for (typename Array::TmpIterator i = iter; i < End(); ++i)
+		m_array[i.Position()] = m_array[i.Position() + 1];
+	this->Resize(m_size - 1);
+	return true;
 }
 
 template <typename ItemType>

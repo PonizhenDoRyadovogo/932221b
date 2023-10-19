@@ -35,7 +35,7 @@ void RandomArray(Array<int> &arr,const int left_lim, const int right_lim)
 int main()
 {
 	srand(time(0));
-	Array<int> arr(10, 2), arr2, arr3, arr4, arr5(5);
+	Array<int> arr(10, 2), arr2, arr3, arr4, arr5(5), arr6(5), arr7(5);
 	arr5[0] = 25;
 	arr5[4] = 25;
 	std::cout << arr[3] << " " << arr[9] << std::endl;
@@ -101,6 +101,24 @@ int main()
 		std::cout << "Insert of iterator: arr5 = " << arr5 << std::endl;
 	else
 		std::cout << "Insert of iterator: false"<<std::endl;
+	RandomArray(arr6, 1, 10);
+	std::cout << "arr6 = " << arr6 << std::endl;
+	Array<int>::TmpIterator left = arr6.Begin(), right = arr6.End();
+	for (int i = 0; i < 2; i++)
+		--right;
+	//left++;
+	if (arr6.DeleteOfIteratorRange(left, right))
+		std::cout << "Delete of range: arr6 = " << arr6 << std::endl;
+	else
+		std::cout << "Index invalid" << std::endl;
+	RandomArray(arr7, 1, 10);
+	std::cout << "arr 7 = " << arr7 << std::endl;
+	iter_b = arr7.Begin();
+	iter_b++;
+	if (arr7.DeleteOfIterator(iter_b))
+		std::cout << "Delete of iterator: arr7 = " << arr7 << std::endl;
+	else
+		std::cout << "Delete of iterator: false" << std::endl;
 }
 
 
