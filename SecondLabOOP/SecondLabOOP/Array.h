@@ -40,11 +40,11 @@ public:
 	TmpIterator End();
 	TmpConstIterator Begin()const;
 	TmpConstIterator End()const;
-	bool InsertIter(TmpIterator& iter, const ItemType& value);
-	bool DeleteOfIteratorRange(TmpIterator &left, TmpIterator &right);
-	bool DeleteOfIterator(TmpIterator &iter);
+	bool InsertIter(TmpIterator iter, const ItemType& value);
+	bool DeleteOfIteratorRange(const TmpIterator &left, TmpIterator right);
+	bool DeleteOfIterator(TmpIterator iter);
 private:
-	int* m_array = nullptr;
+	ItemType* m_array = nullptr;
 	int m_size = 0;
 };
 
@@ -66,7 +66,7 @@ public:
 
 	Iterator operator++(int);
 	Iterator operator--(int);
-	int Position();
+	int Position()const;
 	bool operator ==(const Iterator& other)const;
 	bool operator !=(const Iterator& other)const;
 	bool operator <=(const Iterator& other)const;

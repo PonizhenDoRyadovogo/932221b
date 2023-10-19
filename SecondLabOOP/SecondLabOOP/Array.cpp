@@ -14,7 +14,7 @@ Array<ItemType>::Array(const int size, const ItemType& value)
 	{
 		m_size = size;
 	}
-	m_array = new int[m_size];
+	m_array = new ItemType[m_size];
 
 	for (int i = 0; i < m_size; i++)
 	{
@@ -27,7 +27,7 @@ template <typename ItemType>
 Array<ItemType>::Array(const Array& other)
 	:m_size(other.m_size)
 {
-	m_array = new int[m_size];
+	m_array = new ItemType[m_size];
 	for (int i = 0; i < m_size; i++)
 	{
 		m_array[i] = other.m_array[i];
@@ -90,7 +90,7 @@ Array<ItemType>& Array<ItemType>::operator = (const Array& other)//a = a
 	{
 		m_size = other.m_size;
 		delete[] m_array;
-		m_array = new int[m_size];
+		m_array = new ItemType[m_size];
 	}
 	for (int i = 0; i < m_size;i++)
 	{
@@ -261,7 +261,7 @@ bool Array<ItemType>::DeleteOffValueAll(const ItemType &value)
 template <typename ItemType>
 ItemType Array<ItemType>::SearchMax()const
 {
-	assert(m_size >= 0);
+	assert(m_size != 0);
 	int i = 0;
 	ItemType max = m_array[i];
 	for (i = 1; i < m_size; i++)
@@ -275,7 +275,7 @@ ItemType Array<ItemType>::SearchMax()const
 template <typename ItemType>
 ItemType Array<ItemType>::SearchMin()const
 {
-	assert(m_size >= 0);
+	assert(m_size != 0);
 	int i = 0;
 	ItemType min = m_array[i];
 	for (i = 1; i < m_size; i++)
@@ -359,7 +359,7 @@ Array<ItemType>::Iterator<IT, AT> Array<ItemType>::Iterator<IT, AT>::operator--(
 
 template <typename ItemType>
 template<typename IT, typename AT>
-int Array<ItemType>::Iterator<IT, AT>::Position()
+int Array<ItemType>::Iterator<IT, AT>::Position()const
 {
 	return m_pos;
 }
@@ -420,25 +420,24 @@ Array<ItemType>::TmpConstIterator Array<ItemType>::End()const
 }
 
 template<typename ItemType>typename
-bool Array<ItemType>::InsertIter(TmpIterator& iter, const ItemType& value)
+bool Array<ItemType>::InsertIter(TmpIterator iter, const ItemType& value)
 {
-	--iter;
-	int index = iter.Position();
-	if (index < 0)
+	if (iter.Position() > m_size || iter < Begin())
 		return false;
-	if (index == m_size - 1)//if this is the last index of the array, then just add a number to the end of the array
+	int index = iter.Position();
+	if (iter == Begin())
+		return this->InsertIndex(index, value);
+	else if(index == m_size)//if this is the last index of the array, then just add a number to the end of the array
 	{
 		*this += value;//adding a value to the end of the array
 		return true;
 	}
-	else
-	{
-		return this->InsertIndex(index, value);
-	}
+	index--;
+	return this->InsertIndex(index, value);
 }
 
 template<typename ItemType>typename
-bool Array<ItemType>::DeleteOfIteratorRange(TmpIterator &left, TmpIterator &right)
+bool Array<ItemType>::DeleteOfIteratorRange(const TmpIterator &left, TmpIterator right)
 {
 	if (left.Position() < 0 || left.Position() > right.Position() || right.Position() > m_size)
 		return false;
@@ -456,7 +455,7 @@ bool Array<ItemType>::DeleteOfIteratorRange(TmpIterator &left, TmpIterator &righ
 }
 
 template<typename ItemType>typename
-bool Array<ItemType>::DeleteOfIterator(TmpIterator &iter)
+bool Array<ItemType>::DeleteOfIterator(TmpIterator iter)
 {
 	if (iter.Position() < 0 || iter.Position() > m_size)
 		return false;

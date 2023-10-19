@@ -96,7 +96,7 @@ int main()
 		std::cout << "Iterators are equal" << std::endl;
 	else
 		std::cout << "Iterators are not equal" << std::endl;
-	iter_b = arr5.End();
+	iter_b = arr5.Begin();
 	if (arr5.InsertIter(iter_b, 25))
 		std::cout << "Insert of iterator: arr5 = " << arr5 << std::endl;
 	else
