@@ -82,6 +82,30 @@ void SortShell(int* arr, int n)
 		}
 	}
 }
+
+void SortShellKnuth(int* arr, int n)
+{
+	int i, j, key,k, step = 1;
+	while (step < n / 3)
+		step = 3 * step + 1;
+	for (; step > 0; step = (step - 1)/3)
+	{
+		for (i = 0; i < n; i++)
+		{
+			for (j = i + step; j < n; j += step)
+			{
+				key = arr[j];
+				k = j - step;
+				while (k >= 0 && arr[k] > key)
+				{
+					arr[k + step] = arr[k];
+					k -= step;
+				}
+				arr[k + step] = key;
+			}
+		}
+	}
+}
 int main()
 {
 	srand(time(0));
@@ -94,12 +118,16 @@ int main()
 	std::cout << "\nEnter the right limit of range: ";
 	std::cin >> right_lim;
 	RandArray(arr, n, left_lim, right_lim);
-	/*PrintArray(arr, n);
-	std::cout << std::endl;*/
+	PrintArray(arr, n);
+	std::cout << std::endl;
 	/*CreateFile("Array.txt", arr, n);*/
 	/*SortInsert(arr, n);*/
-	SortShell(arr, n);
-	/*PrintArray(arr, n);*/
+	/*int* arr_step_knuth = new int[n];
+	arr_step_knuth[0] = 1;
+	for (int i = 1; i < n / 3; i++)
+		arr_step_knuth[i] = arr_step_knuth[i - 1] * 3 + 1;*/
+	SortShellKnuth(arr, n);
+	PrintArray(arr, n);
 	if (CheckSort(arr, n) == true)
 		std::cout << " The array is sorted";
 	else
