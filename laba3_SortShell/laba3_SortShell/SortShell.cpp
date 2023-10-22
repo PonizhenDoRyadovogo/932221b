@@ -1,18 +1,21 @@
 #include<iostream>
 #include<time.h>
+#include<vector>
+#include<fstream>
+#include<chrono>
 
-void PrintArray(int* a, int n)
+void PrintArray(std::vector<int> a)
 {
 	std::cout << "[";
-	for (int* p = a; p < a + n; p++)
-		std::cout << *p << " ";
+	for (int i = 0; i < a.size(); i++)
+		std::cout << a[i] << " ";
 	std::cout << "]";
 }
 
-void SortInsert(int* arr, int n)
+void SortInsert(std::vector<int> &arr)
 {
 	int i, j, key;
-	for (i = 1; i < n; i++)
+	for (i = 1; i < arr.size(); i++)
 	{
 		key = arr[i];
 		j = i - 1;
@@ -25,50 +28,22 @@ void SortInsert(int* arr, int n)
 	}
 }
 
-void RandArray(int *a,int n ,int left_lim, int right_lim)
+bool CheckSort(std::vector<int> &arr)
 {
-	for (int i = 0; i < n; i++)
-		a[i] = rand() % (right_lim - left_lim + 1) + left_lim;
-}
-
-void CreateFile(const char* name, int *a, int n)
-//name - имя создаваемого файла
-//n - кол-во чисел
-//lf - левая граница диапазона
-//rt - правая граница диапазона
-{
-	FILE* f;
-	errno_t f_err = fopen_s(&f, name, "w");
-	if (f_err)
+	for (int i = 0; i < arr.size() - 1; i++)
 	{
-		perror("error opening file in CreateFile");
-		exit(-1);
-	}
-	for (int i = 0; i < n; i++)
-	{
-		fprintf(f, "%d ", a[i]);
-	}
-	fclose(f);
-}
-
-bool CheckSort(int* a, int n)
-{
-	for (int i = 0; i < n - 1; i++)
-	{
-		if (a[i] > a[i + 1])
+		if (arr[i] > arr[i + 1])
 			return false;
 	}
 	return true;
 }
 
-void SortShell(int* arr, int n)
+void InsertWithStep(std::vector<int> &arr, int step)
 {
-	int step = n / 2, i, j , k, key;
-	for (; step > 0; step /= 2)
-	{
-		for (i = 0; i < n; i++)
+	int i, j, k, key;
+		for (i = 0; i < step; i++)
 		{
-			for (j = i + step; j < n; j += step)
+			for (j = i + step; j < arr.size(); j += step)
 			{
 				key = arr[j];
 				k = j - step;
@@ -80,58 +55,271 @@ void SortShell(int* arr, int n)
 				arr[k + step] = key;
 			}
 		}
-	}
 }
 
-void SortShellKnuth(int* arr, int n)
+void SortShell(std::vector<int> &arr)
 {
-	int i, j, key,k, step = 1;
-	while (step < n / 3)
-		step = 3 * step + 1;
-	for (; step > 0; step = (step - 1)/3)
-	{
-		for (i = 0; i < n; i++)
-		{
-			for (j = i + step; j < n; j += step)
-			{
-				key = arr[j];
-				k = j - step;
-				while (k >= 0 && arr[k] > key)
-				{
-					arr[k + step] = arr[k];
-					k -= step;
-				}
-				arr[k + step] = key;
-			}
-		}
-	}
+	int step = arr.size() / 2;
+	for(; step > 0; step /= 2)
+		InsertWithStep(arr, step);
+	
 }
+
+void SortShellKnuth(std::vector<int> &arr)
+{
+	int step = 1;
+	while (step < arr.size() / 3)
+		step = 3 * step + 1;
+	for(; step > 0; step = (step - 1)/3)
+		InsertWithStep(arr, step);
+}
+
+void SortShellHibbard(std::vector<int>& arr)
+{
+	int step = 1;
+	int degr = 2;
+	while (step < arr.size())
+	{
+		step = degr * 2 - 1;
+		degr *= 2;
+	}
+	for (; step > 0; step = (step - 1) / 2)
+		InsertWithStep(arr, step);
+}
+
+void FileInArray(const char *name, std::vector<int> &arr)
+{
+	std::ifstream fin(name);
+	int n;
+	if (!fin.good())
+		std::cout << "File not found!" << std::endl;
+	else
+	{
+		while (fin >> n)
+			arr.push_back(n);
+	}
+	fin.close();
+}
+
+void AverageTimeWorkShell(std::vector<int>& arr, const char* name, float &average_time)
+{
+	average_time = 0;
+	for (int i = 1; i <= 3; i++)
+	{
+		auto start = std::chrono::high_resolution_clock::now();
+		SortShell(arr);
+		auto end = std::chrono::high_resolution_clock::now();
+		float time1 = std::chrono::duration_cast<std::chrono::milliseconds>(end - start).count();
+		average_time += time1;
+		/*if (CheckSort(arr))
+			std::cout <<"Try "<< i << " .The array is sorted" << std::endl;
+		else
+			std::cout <<"Try "<< i << " .The array is not sorted" << std::endl;*/
+		arr.clear();
+		FileInArray("FirstArray10000_in_range10.txt", arr);
+	}
+	average_time /= 3;
+}
+
+void AverageTimeWorkShellKnuth(std::vector<int>& arr, const char* name, float& average_time)
+{
+	average_time = 0;
+	for (int i = 1; i <= 3; i++)
+	{
+		auto start = std::chrono::high_resolution_clock::now();
+		SortShellKnuth(arr);
+		auto end = std::chrono::high_resolution_clock::now();
+		float time1 = std::chrono::duration_cast<std::chrono::milliseconds>(end - start).count();
+		average_time += time1;
+		/*if (CheckSort(arr))
+			std::cout <<"Try "<< i << " .The array is sorted" << std::endl;
+		else
+			std::cout <<"Try "<< i << " .The array is not sorted" << std::endl;*/
+		arr.clear();
+		FileInArray("FirstArray10000_in_range10.txt", arr);
+	}
+	average_time /= 3;
+}
+
+void AverageTimeWorkShellHibbard(std::vector<int>& arr, const char* name, float& average_time)
+{
+	average_time = 0;
+	for (int i = 1; i <= 3; i++)
+	{
+		auto start = std::chrono::high_resolution_clock::now();
+		SortShellHibbard(arr);
+		auto end = std::chrono::high_resolution_clock::now();
+		float time1 = std::chrono::duration_cast<std::chrono::milliseconds>(end - start).count();
+		average_time += time1;
+		/*if (CheckSort(arr))
+			std::cout <<"Try "<< i << " .The array is sorted" << std::endl;
+		else
+			std::cout <<"Try "<< i << " .The array is not sorted" << std::endl;*/
+		arr.clear();
+		FileInArray("FirstArray10000_in_range10.txt", arr);
+	}
+	average_time /= 3;
+}
+
 int main()
 {
 	srand(time(0));
-	int n, left_lim, right_lim;
-	std::cout << "Enter the number of numbers in the array n = ";
-	std::cin >> n;
-	int* arr = new int[n];
-	std::cout << "\nEnter the left limit of range: ";
-	std::cin >> left_lim;
-	std::cout << "\nEnter the right limit of range: ";
-	std::cin >> right_lim;
-	RandArray(arr, n, left_lim, right_lim);
-	PrintArray(arr, n);
-	std::cout << std::endl;
-	/*CreateFile("Array.txt", arr, n);*/
-	/*SortInsert(arr, n);*/
-	/*int* arr_step_knuth = new int[n];
-	arr_step_knuth[0] = 1;
-	for (int i = 1; i < n / 3; i++)
-		arr_step_knuth[i] = arr_step_knuth[i - 1] * 3 + 1;*/
-	SortShellKnuth(arr, n);
-	PrintArray(arr, n);
-	if (CheckSort(arr, n) == true)
-		std::cout << " The array is sorted";
-	else
-		std::cout << " The array is not sorted";
+	std::vector<int> arr10k_range10, arr10k_range1k, arr10k_range100k, arr100k_range10, arr100k_range1k, arr100k_range100k, arr1kk_range10, arr1kk_range1000, arr1kk_range100k;
+	float average_time = 0;
+	FileInArray("FirstArray10000_in_range10.txt", arr10k_range10);
+	FileInArray("SecondArray10000_in_range1000.txt", arr10k_range1k);
+	FileInArray("ThirdArray10000_in_range100000.txt", arr10k_range100k);
 
+	FileInArray("FirstArray100000_in_range10.txt", arr100k_range10);
+	FileInArray("SecondArray100000_in_range1000.txt", arr100k_range1k);
+	FileInArray("ThirdArray100000_in_range100000.txt", arr100k_range100k);
 
+	FileInArray("FirstArray1000000_in_range10.txt", arr1kk_range10);
+	FileInArray("SecondArray1000000_in_range1000.txt", arr1kk_range1000);
+	FileInArray("ThirdArray1000000_in_range100000.txt", arr1kk_range100k);
+
+	//Shell's step
+	std::cout << "===========Sort Shell===========\n";
+	AverageTimeWorkShell(arr10k_range10, "FirstArray10000_in_range10.txt", average_time);
+	std::cout << "Numbers of element = 10000, range[-10;10]\n";
+	std::cout << "Average time = " << average_time << " ms" << std::endl;
+	average_time = 0;
+
+	AverageTimeWorkShell(arr10k_range1k, "SecondArray10000_in_range1000.txt", average_time);
+	std::cout << "Numbers of element = 10000, range[-1000;1000]\n";
+	std::cout << "Average time = " << average_time << " ms" << std::endl;
+	average_time = 0;
+
+	AverageTimeWorkShell(arr10k_range100k, "ThirdArray10000_in_range100000.txt", average_time);
+	std::cout << "Numbers of element = 10000, range[-100000;100000]\n";
+	std::cout << "Average time = " << average_time << " ms" << std::endl;
+	average_time = 0;
+
+	AverageTimeWorkShell(arr100k_range10, "FirstArray100000_in_range10.txt", average_time);
+	std::cout << "Numbers of element = 100000, range[-10;10]\n";
+	std::cout << "Average time = " << average_time << " ms" << std::endl;
+	average_time = 0;
+
+	AverageTimeWorkShell(arr100k_range1k, "SecondArray100000_in_range1000.txt", average_time);
+	std::cout << "Numbers of element = 100000, range[-1000;1000]\n";
+	std::cout << "Average time = " << average_time << " ms" << std::endl;
+	average_time = 0;
+
+	AverageTimeWorkShell(arr100k_range100k, "ThirdArray100000_in_range100000.txt", average_time);
+	std::cout << "Numbers of element = 100000, range[-100000;100000]\n";
+	std::cout << "Average time = " << average_time << " ms" << std::endl;
+	average_time = 0;
+
+	AverageTimeWorkShell(arr1kk_range10, "FirstArray1000000_in_range10.txt", average_time);
+	std::cout << "Numbers of element = 1000000, range[-10;10]\n";
+	std::cout << "Average time = " << average_time << " ms" << std::endl;
+	average_time = 0;
+
+	AverageTimeWorkShell(arr1kk_range1000, "SecondArray1000000_in_range1000.txt", average_time);
+	std::cout << "Numbers of element = 1000000, range[-1000;1000]\n";
+	std::cout << "Average time = " << average_time << " ms" << std::endl;
+	average_time = 0;
+	
+	AverageTimeWorkShell(arr1kk_range100k, "ThirdArray1000000_in_range100000.txt", average_time);
+	std::cout << "Numbers of element = 1000000, range[-100000;100000]\n";
+	std::cout << "Average time = " << average_time << " ms" << std::endl;
+	average_time = 0;
+
+	//Knuth's step
+	std::cout << "===========Sort Shell with step's Knuth===========\n";
+	AverageTimeWorkShellKnuth(arr10k_range10, "FirstArray10000_in_range10.txt", average_time);
+	std::cout << "Numbers of element = 10000, range[-10;10]\n";
+	std::cout << "Average time = " << average_time << " ms" << std::endl;
+	average_time = 0;
+
+	AverageTimeWorkShellKnuth(arr10k_range1k, "SecondArray10000_in_range1000.txt", average_time);
+	std::cout << "Numbers of element = 10000, range[-1000;1000]\n";
+	std::cout << "Average time = " << average_time << std::endl;
+	average_time = 0;
+
+	AverageTimeWorkShellKnuth(arr10k_range100k, "ThirdArray10000_in_range100000.txt", average_time);
+	std::cout << "Numbers of element = 10000, range[-100000;100000]\n";
+	std::cout << "Average time = " << average_time << " ms" << std::endl;
+	average_time = 0;
+
+	AverageTimeWorkShellKnuth(arr100k_range10, "FirstArray100000_in_range10.txt", average_time);
+	std::cout << "Numbers of element = 100000, range[-10;10]\n";
+	std::cout << "Average time = " << average_time << " ms" << std::endl;
+	average_time = 0;
+
+	AverageTimeWorkShellKnuth(arr100k_range1k, "SecondArray100000_in_range1000.txt", average_time);
+	std::cout << "Numbers of element = 100000, range[-1000;1000]\n";
+	std::cout << "Average time = " << average_time << " ms" << std::endl;
+	average_time = 0;
+
+	AverageTimeWorkShellKnuth(arr100k_range100k, "ThirdArray100000_in_range100000.txt", average_time);
+	std::cout << "Numbers of element = 100000, range[-100000;100000]\n";
+	std::cout << "Average time = " << average_time << " ms" << std::endl;
+	average_time = 0;
+
+	AverageTimeWorkShellKnuth(arr1kk_range10, "FirstArray1000000_in_range10.txt", average_time);
+	std::cout << "Numbers of element = 1000000, range[-10;10]\n";
+	std::cout << "Average time = " << average_time << " ms" << std::endl;
+	average_time = 0;
+
+	AverageTimeWorkShellKnuth(arr1kk_range1000, "SecondArray1000000_in_range1000.txt", average_time);
+	std::cout << "Numbers of element = 1000000, range[-1000;1000]\n";
+	std::cout << "Average time = " << average_time << " ms" << std::endl;
+	average_time = 0;
+
+	AverageTimeWorkShellKnuth(arr1kk_range100k, "ThirdArray1000000_in_range100000.txt", average_time);
+	std::cout << "Numbers of element = 1000000, range[-100000;100000]\n";
+	std::cout << "Average time = " << average_time << " ms" << std::endl;
+	average_time = 0;
+	
+	//Hibbard's step
+	std::cout << "===========Sort Shell with step's Hibbard===========\n";
+	AverageTimeWorkShellHibbard(arr10k_range10, "FirstArray10000_in_range10.txt", average_time);
+	std::cout << "Numbers of element = 10000, range[-10;10]\n";
+	std::cout << "Average time = " << average_time << " ms" << std::endl;
+	average_time = 0;
+
+	AverageTimeWorkShellHibbard(arr10k_range1k, "SecondArray10000_in_range1000.txt", average_time);
+	std::cout << "Numbers of element = 10000, range[-1000;1000]\n";
+	std::cout << "Average time = " << average_time << " ms" << std::endl;
+	average_time = 0;
+
+	AverageTimeWorkShellHibbard(arr10k_range100k, "ThirdArray10000_in_range100000.txt", average_time);
+	std::cout << "Numbers of element = 10000, range[-100000;100000]\n";
+	std::cout << "Average time = " << average_time << " ms" << std::endl;
+	average_time = 0;
+
+	AverageTimeWorkShellHibbard(arr100k_range10, "FirstArray100000_in_range10.txt", average_time);
+	std::cout << "Numbers of element = 100000, range[-10;10]\n";
+	std::cout << "Average time = " << average_time << " ms" << std::endl;
+	average_time = 0;
+
+	AverageTimeWorkShellHibbard(arr100k_range1k, "SecondArray100000_in_range1000.txt", average_time);
+	std::cout << "Numbers of element = 100000, range[-1000;1000]\n";
+	std::cout << "Average time = " << average_time << " ms" << std::endl;
+	average_time = 0;
+
+	AverageTimeWorkShellHibbard(arr100k_range100k, "ThirdArray100000_in_range100000.txt", average_time);
+	std::cout << "Numbers of element = 100000, range[-100000;100000]\n";
+	std::cout << "Average time = " << average_time << " ms" << std::endl;
+	average_time = 0;
+
+	AverageTimeWorkShellHibbard(arr1kk_range10, "FirstArray1000000_in_range10.txt", average_time);
+	std::cout << "Numbers of element = 1000000, range[-10;10]\n";
+	std::cout << "Average time = " << average_time << " ms" << std::endl;
+	average_time = 0;
+
+	AverageTimeWorkShellHibbard(arr1kk_range1000, "SecondArray1000000_in_range1000.txt", average_time);
+	std::cout << "Numbers of element = 1000000, range[-1000;1000]\n";
+	std::cout << "Average time = " << average_time << " ms" << std::endl;
+	average_time = 0;
+
+	AverageTimeWorkShellHibbard(arr1kk_range100k, "ThirdArray1000000_in_range100000.txt", average_time);
+	std::cout << "Numbers of element = 1000000, range[-100000;100000]\n";
+	std::cout << "Average time = " << average_time << " ms" << std::endl;
+	average_time = 0;
 }
+
+
+
+	
