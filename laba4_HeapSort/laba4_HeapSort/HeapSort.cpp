@@ -7,22 +7,22 @@
 
 void Sift(std::vector<int>& a, const int size,int index)
 {
-	int descendant = 2 * index + 1, flag = 1, tmp = a[index];
+	int descendant = 2 * index + 1, flag = 1, tmp = a[index];//tmp - parent
 	while (descendant < size && flag)
 	{
-		if ((descendant + 1) < size)
+		if ((descendant + 1) < size)//check if the next descendant exists
 		{
-			if (a[descendant + 1] > a[descendant])
-				descendant++;
+			if (a[descendant + 1] > a[descendant])//if the next descendant is larger than the previous one
+				descendant++;//then we take the index of the next descendant (right)
 		}
-		if (a[descendant] > tmp)
+		if (a[descendant] > tmp)//if descendant > tmp(parent) 
 		{
-			a[index] = a[descendant];
+			a[index] = a[descendant];//then descendant falls into place parent
 			index = descendant;
 			descendant = 2 * index + 1;
 		}
 		else
-			flag = 0;	
+			flag = 0;//if its not happend ===> good
 	}
 	a[index] = tmp;
 }
