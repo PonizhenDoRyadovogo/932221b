@@ -2,6 +2,7 @@
 #include<iostream>
 #include<assert.h>
 #include<stdint.h>
+#include<string.h>
 
 BoolVector::BoolVector()
 {
@@ -20,20 +21,52 @@ BoolVector::BoolVector(UI length, const bool value)
 	m_insignificantRankCount = (m_cellCount * m_size) - m_length;
 	m_cells = new UC[m_cellCount];
 	uint8_t mask = 0;
+	int i;
 	if (value)
 	{
-		for (int i = 0; i < m_cellCount; i++)
+		for (i = 0; i < m_cellCount; i++)
 		{
 			m_cells[i] |= ~mask;
 		}
 	}
 	else
 	{
-		for (int i = 0; i < m_cellCount; i++)
+		for (i = 0; i < m_cellCount; i++)
 		{
 			m_cells[i] &= mask;
 		}
 	}
+	m_cells[m_cellCount - 1] = m_cells[m_cellCount - 1] >> m_insignificantRankCount;
+	m_cells[m_cellCount - 1] = m_cells[m_cellCount - 1] << m_insignificantRankCount;
+}
+
+BoolVector::BoolVector(const BoolVector& other)
+	:m_length(other.m_length)
+{
+	m_cellCount = other.m_cellCount;
+	m_cells = new UC[m_cellCount];
+	m_insignificantRankCount = (m_cellCount * m_size) - m_length;
+	for (int i = 0; i < m_cellCount; i++)
+	{
+		m_cells[i] = other.m_cells[i];
+	}
+}
+
+BoolVector::BoolVector(const char* str)
+{
+	m_length = strlen(str);
+	m_cellCount = m_length / 8 + bool(m_length % 8);
+	m_insignificantRankCount = (m_cellCount * m_size) - m_length;
+	m_cells = new UC[m_cellCount];//"10110111"
+	for (int i = 0; i < m_length; i++)
+	{
+		if (str[i] == '1')
+			Set1(i / 8, i % 8);
+		else
+			Set0(i / 8, i % 8);
+	}
+	m_cells[m_cellCount - 1] = m_cells[m_cellCount - 1] >> m_insignificantRankCount;
+	m_cells[m_cellCount - 1] = m_cells[m_cellCount - 1] << m_insignificantRankCount;
 }
 
 BoolVector:: ~BoolVector()
@@ -43,7 +76,7 @@ BoolVector:: ~BoolVector()
 
 int BoolVector::Length()const
 {
-	return m_length;
+	return (m_length - m_insignificantRankCount);
 }
 
 void BoolVector::PrintCell(const int& number_cell)const
@@ -81,5 +114,23 @@ void BoolVector::Set0(const int& cell, const int& pos_cell)
 {
 	uint8_t mask = 1;//00000001
 	mask = mask << 7 - pos_cell;
-	
+	m_cells[cell] = m_cells[cell] & ~mask;
+}
+
+void BoolVector::Inversion()
+{
+	for (int i = 0; i < m_cellCount; i++)
+	{
+		m_cells[i] = ~m_cells[i];
+	}
+	m_cells[m_cellCount - 1] = m_cells[m_cellCount - 1] >> m_insignificantRankCount;
+	m_cells[m_cellCount - 1] = m_cells[m_cellCount - 1] << m_insignificantRankCount;
+}
+
+void BoolVector::Swap(BoolVector& other)
+{
+	std::swap(m_length, other.m_length);
+	std::swap(m_cellCount, other.m_cellCount);
+	std::swap(m_insignificantRankCount, other.m_insignificantRankCount);
+	std::swap(m_cells, other.m_cells);
 }
