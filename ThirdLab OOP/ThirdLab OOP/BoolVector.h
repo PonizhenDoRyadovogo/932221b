@@ -1,11 +1,13 @@
 #pragma once
 #include<stdint.h>
+#include<iostream>
+
 class BoolVector
 {
 public:
 	using UI = unsigned int;
 	using UC = unsigned char;
-
+	class BoolRank;
 	BoolVector();
 	BoolVector(const UI length, const bool value = false);
 	BoolVector(const BoolVector& other);
@@ -18,6 +20,26 @@ public:
 	void Set0(const int& cell, const int& pos_cell);
 	void Inversion();
 	void Swap(BoolVector& other);
+	BoolVector operator~();
+	BoolVector& operator=(const BoolVector& other);
+	BoolVector operator&(const BoolVector& other);
+	BoolVector operator|(const BoolVector& other);
+	BoolVector operator^(const BoolVector& other);
+	BoolVector& operator&=(const BoolVector& other);
+	BoolVector& operator|=(const BoolVector& other);
+	BoolVector& operator^=(const BoolVector& other);
+	BoolVector::BoolRank operator[](const int index);
+	const BoolVector::BoolRank operator[](const int index)const;
+	BoolVector operator>>(const int count);
+	BoolVector operator<<(const int count);
+	BoolVector operator>>=(const int count);
+	BoolVector operator<<=(const int count);
+	void Set1InRange(int index, const int range);
+	void Set0InRange(int index, const int range);
+	void Set1All();
+	void Set0All();
+	int Weight();
+	friend std::ostream& operator <<(std::ostream& stream, const BoolVector& vector);
 	
 private:
 	UI m_length = 0;//length vector
@@ -27,3 +49,18 @@ private:
 	const uint8_t m_size = 8;
 };
 
+class BoolVector::BoolRank
+{
+public:
+	BoolRank(UC* cell, const int maskoffset);
+	BoolRank& operator=(bool value);
+	void Print();
+	BoolRank& operator=(const BoolRank &other);
+	operator bool() const;
+
+private:
+	uint8_t* m_cell = nullptr;
+	uint8_t m_mask = 1 << 7;
+};
+
+std::istream& operator >>(std::istream& stream, BoolVector& vector);
