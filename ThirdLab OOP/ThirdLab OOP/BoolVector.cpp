@@ -68,7 +68,6 @@ BoolVector::BoolVector(const char* str)
 	}
 	m_cells[m_cellCount - 1] = m_cells[m_cellCount - 1] >> m_insignificantRankCount;
 	m_cells[m_cellCount - 1] = m_cells[m_cellCount - 1] << m_insignificantRankCount;
-	m_length = strlen(str);
 }
 
 BoolVector:: ~BoolVector()
@@ -79,30 +78,6 @@ BoolVector:: ~BoolVector()
 int BoolVector::Length()const
 {
 	return m_length;
-}
-
-void BoolVector::PrintCell(const int& number_cell)const
-{
-	assert(number_cell >= 0 || number_cell < m_cellCount);
-
-	for (uint8_t i = 128; i > 0; i >>= 1)// i == 10000000 in first try
-	{
-		if (m_cells[number_cell] & i)
-			std::cout << "1 ";
-		else
-			std::cout << "0 ";
-	}
-}
-
-void BoolVector::Print()const
-{
-	for (int i = 0; i < m_cellCount; i++)
-	{
-		std::cout << "[";
-		PrintCell(i);
-		std::cout << "]";
-	}
-	std::cout << std::endl;
 }
 
 void BoolVector::Set1(const int& cell, const int& pos_cell)
