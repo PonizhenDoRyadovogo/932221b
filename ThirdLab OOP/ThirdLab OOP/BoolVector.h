@@ -14,8 +14,6 @@ public:
 	BoolVector(const char* str);
 	~BoolVector();
 	int Length()const;
-	void PrintCell(const int& cellNumber)const;
-	void Print()const;
 	void Set1(const int& cell, const int& pos_cell);
 	void Set0(const int& cell, const int& pos_cell);
 	void Inversion();
