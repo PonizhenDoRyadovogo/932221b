@@ -225,12 +225,12 @@ void BoolVector::BoolRank::Print()
 
 BoolVector::BoolRank& BoolVector::BoolRank::operator=(const BoolRank &other)
 {
-	if (m_cell == other.m_cell)
-		return *this;
-	delete[] m_cell;
-	m_cell = new UC;
-	m_cell = other.m_cell;
-	m_mask = other.m_mask;
+	UI copy_mask = other.m_mask;
+	copy_mask &= *other.m_cell;
+	if (copy_mask == other.m_mask)
+		(*m_cell) |= m_mask;
+	else
+		(*m_cell) &= ~m_mask;
 	return *this;
 }
 

@@ -93,4 +93,7 @@ int main()
 	BoolVector bool9;
 	std::cin >> bool9;
 	std::cout << "bool9 = " << bool9;
+
+	bool4[1] = bool7[1];
+	std::cout << "bool4 = " << bool4;
 }
