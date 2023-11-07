@@ -114,7 +114,7 @@ void BoolVector::Swap(BoolVector& other)
 	std::swap(m_cells, other.m_cells);
 }
 
-BoolVector BoolVector::operator ~()
+BoolVector BoolVector::operator ~()const
 {
 	BoolVector copy(*this);
 	copy.Inversion();
@@ -138,34 +138,37 @@ BoolVector& BoolVector::operator=(const BoolVector& other)
 	return *this;
 }
 
-BoolVector BoolVector::operator&(const BoolVector& other)
+BoolVector BoolVector::operator&(const BoolVector& other)const
 {
 	assert(m_length == other.m_length);
+	BoolVector tmp(m_length);
 	for (int i = 0; i < m_cellCount; i++)
 	{
-		m_cells[i] = m_cells[i] & other.m_cells[i];
+		tmp.m_cells[i] = m_cells[i] & other.m_cells[i];
 	}
-	return *this;
+	return tmp;
 }
 
-BoolVector BoolVector::operator|(const BoolVector& other)
+BoolVector BoolVector::operator|(const BoolVector& other)const
 {
 	assert(m_length == other.m_length);
+	BoolVector tmp(m_length);
 	for (int i = 0; i < m_cellCount; i++)
 	{
-		m_cells[i] = m_cells[i] | other.m_cells[i];
+		tmp.m_cells[i] = m_cells[i] | other.m_cells[i];
 	}
-	return *this;
+	return tmp;
 }
 
-BoolVector BoolVector::operator^(const BoolVector& other)
+BoolVector BoolVector::operator^(const BoolVector& other)const
 {
 	assert(m_length == other.m_length);
+	BoolVector tmp(m_length);
 	for (int i = 0; i < m_cellCount; i++)
 	{
-		m_cells[i] = m_cells[i] ^ other.m_cells[i];
+		tmp.m_cells[i] = m_cells[i] ^ other.m_cells[i];
 	}
-	return *this;
+	return tmp;
 }
 
 BoolVector& BoolVector::operator&=(const BoolVector& other)
@@ -195,7 +198,7 @@ BoolVector::BoolRank::BoolRank(UC* cell, const int maskoffset)
 	m_mask >>= maskoffset;
 }
 
-BoolVector::BoolRank& BoolVector::BoolRank::operator=(bool value)
+BoolVector::BoolRank& BoolVector::BoolRank::operator=(const bool& value)
 {
 	if (value == 0)
 		(*m_cell) &= ~m_mask;
@@ -366,4 +369,49 @@ std::istream& operator >>(std::istream& stream, BoolVector& vector)
 	}
 	delete[]str;
 	return stream;
+}
+
+bool BoolVector::BoolRank::operator==(BoolRank& other)const
+{
+	return (*this == (bool)other);
+}
+
+bool BoolVector::BoolRank::operator==(const bool& value)const
+{
+	if ((bool)*this == value)
+		return true;
+	else
+		return false;
+}
+
+bool BoolVector::BoolRank::operator~()const
+{
+	if ((bool)*this & true)
+		return false;
+	else
+		return true;
+}
+
+bool BoolVector::BoolRank::operator&(const bool& value)const
+{
+	if (value == 0)
+		return false;
+	else
+		return ((bool)*this & true);
+}
+
+bool BoolVector::BoolRank::operator|(const bool& value)const
+{
+	if (value)
+		return true;
+	else
+		return ((bool)*this | false);
+}
+
+bool BoolVector::BoolRank::operator^(const bool& value)const
+{
+	if (value == (bool)*this)
+		return false;
+	else
+		return true;
 }

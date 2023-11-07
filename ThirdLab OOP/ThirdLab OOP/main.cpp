@@ -96,4 +96,19 @@ int main()
 
 	bool4[1] = bool7[1];
 	std::cout << "bool4 = " << bool4;
+
+	if (bool4[1] == bool4[10])
+		std::cout << "true\n";
+	else
+		std::cout << "false\n";
+
+	if (bool4[1] == false)
+		std::cout << "true\n";
+	else
+		std::cout << "false\n";
+
+	bool4[0] = bool4[0] & false;
+	std::cout << "bool4 = " << bool4;
+
+
 }

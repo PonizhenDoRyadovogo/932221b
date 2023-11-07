@@ -18,11 +18,11 @@ public:
 	void Set0(const int& cell, const int& pos_cell);
 	void Inversion();
 	void Swap(BoolVector& other);
-	BoolVector operator~();
+	BoolVector operator~()const;
 	BoolVector& operator=(const BoolVector& other);
-	BoolVector operator&(const BoolVector& other);
-	BoolVector operator|(const BoolVector& other);
-	BoolVector operator^(const BoolVector& other);
+	BoolVector operator&(const BoolVector& other)const;
+	BoolVector operator|(const BoolVector& other)const;
+	BoolVector operator^(const BoolVector& other)const;
 	BoolVector& operator&=(const BoolVector& other);
 	BoolVector& operator|=(const BoolVector& other);
 	BoolVector& operator^=(const BoolVector& other);
@@ -51,11 +51,16 @@ class BoolVector::BoolRank
 {
 public:
 	BoolRank(UC* cell, const int maskoffset);
-	BoolRank& operator=(bool value);
+	BoolRank& operator=(const bool &value);
 	void Print();
 	BoolRank& operator=(const BoolRank &other);
 	operator bool() const;
-
+	bool operator==(BoolRank &other)const;
+	bool operator==(const bool& value)const;
+	bool operator~()const;
+	bool operator&(const bool& value)const;
+	bool operator|(const bool& value)const;
+	bool operator^(const bool& vale)const;
 private:
 	uint8_t* m_cell = nullptr;
 	uint8_t m_mask = 1 << 7;
