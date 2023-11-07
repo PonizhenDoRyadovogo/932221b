@@ -28,8 +28,8 @@ public:
 	BoolVector& operator^=(const BoolVector& other);
 	BoolVector::BoolRank operator[](const int index);
 	const BoolVector::BoolRank operator[](const int index)const;
-	BoolVector operator>>(const int count);
-	BoolVector operator<<(const int count);
+	BoolVector operator>>(const int count)const;
+	BoolVector operator<<(const int count)const;
 	BoolVector operator>>=(const int count);
 	BoolVector operator<<=(const int count);
 	void Set1InRange(int index, const int range);

@@ -61,13 +61,13 @@ int main()
 	std::cout << "bool8 ^= bool7\n";
 	std::cout << "bool8 = "<<bool8;
 
-	bool7 >>= 3;
+	bool7 >>= 9;
 	std::cout << "bool7 >>=  3\n";
 	std::cout << "bool7 = "<<bool7;
 
-	bool7 <<= 3;
-	std::cout << "bool7 <<= 3\n";
-	std::cout << "bool7 = "<<bool7;
+	//bool7 <<= 3;
+	//std::cout << "bool7 <<= 3\n";
+	//std::cout << "bool7 = "<<bool7;
 
 	bool7.Set0InRange(0, 10);
 	std::cout << "Work of Set0 in range:\n";
@@ -90,9 +90,9 @@ int main()
 	bool4[10] = 0;
 	std::cout << "bool 4 = "<<bool4;
 
-	BoolVector bool9;
+	/*BoolVector bool9;
 	std::cin >> bool9;
-	std::cout << "bool9 = " << bool9;
+	std::cout << "bool9 = " << bool9;*/
 
 	bool4[1] = bool7[1];
 	std::cout << "bool4 = " << bool4;
@@ -110,5 +110,14 @@ int main()
 	bool4[0] = bool4[0] & false;
 	std::cout << "bool4 = " << bool4;
 
+	BoolVector bool10(32, 1);
+	std::cout << "bool10 = " << bool10;
 
+	bool10 = bool10 >> 9;
+	std::cout << "bool10 = " << bool10;
+
+	BoolVector bool11 = "110111111101111111011111";
+	std::cout << "bool11 = " << bool11;
+	bool11 = bool11 << 9;
+	std::cout << "bool11 = " << bool11;
 }
