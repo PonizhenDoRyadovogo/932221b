@@ -14,8 +14,8 @@ public:
 	BoolVector(const char* str);
 	~BoolVector();
 	int Length()const;
-	void Set1(const int& cell, const int& pos_cell);
-	void Set0(const int& cell, const int& pos_cell);
+	void Set1(const int cell, const int pos_cell);
+	void Set0(const int cell, const int pos_cell);
 	void Inversion();
 	void Swap(BoolVector& other);
 	BoolVector operator~()const;
@@ -44,23 +44,23 @@ private:
 	UI m_cellCount = 0;//number cells
 	uint8_t m_insignificantRankCount = 0;
 	UC* m_cells = nullptr;
-	const uint8_t m_size = 8;
+	static const uint8_t m_cellSize = 8;
 };
 
 class BoolVector::BoolRank
 {
 public:
 	BoolRank(UC* cell, const int maskoffset);
-	BoolRank& operator=(const bool &value);
+	BoolRank& operator=(const bool value);
 	void Print();
 	BoolRank& operator=(const BoolRank &other);
 	operator bool() const;
 	bool operator==(BoolRank &other)const;
-	bool operator==(const bool& value)const;
+	bool operator==(const bool value)const;
 	bool operator~()const;
-	bool operator&(const bool& value)const;
-	bool operator|(const bool& value)const;
-	bool operator^(const bool& vale)const;
+	bool operator&(const bool value)const;
+	bool operator|(const bool value)const;
+	bool operator^(const bool vale)const;
 private:
 	uint8_t* m_cell = nullptr;
 	uint8_t m_mask = 1 << 7;

@@ -3,6 +3,31 @@
 
 int main()
 {
+	BoolVector foo1(50, 1);
+	std::cout << "left shift:\n";
+	for (int i = 0; i <= foo1.Length(); ++i) {
+		std::cout << i << ": ";
+		std::cout << (foo1 << i);
+	}
+	std::cout << "=====================\n";
+	std::cout << "right shift:\n";
+	for (int i = 0; i <= foo1.Length(); ++i) {
+		std::cout << i << ": ";
+		std::cout << (foo1 >> i);
+	}
+
+	return 0;
+	BoolVector foo(20, 1);
+	std::cout << "left shift:\n";
+	for (int i = 0; i <= foo.Length(); ++i) {
+		std::cout << (foo << i);
+	}
+	std::cout << "=====================\n";
+	std::cout << "right shift:\n";
+	for (int i = 0; i <= foo.Length(); ++i) {
+		std::cout << (foo >> i);
+	}
+
 	BoolVector bool1, bool2(35,4), bool3(bool2);
 	std::cout << "bool1 = " << bool1;
 	std::cout << "bool2 = "<<bool2;
