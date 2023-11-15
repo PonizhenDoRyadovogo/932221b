@@ -232,39 +232,27 @@ BoolVector BoolVector::operator>>(const int count)const
 {
 	assert(count >= 0);
 	BoolVector tmp(*this);
-	if (count / m_cellSize == 0)
-	{
-		tmp.m_cells[m_cellCount - 1] >>= count;
-		for (int i = tmp.m_cellCount - 2; i >= 0; i--)
-		{
-			UI mask = 0;
-			mask |= tmp.m_cells[i];
-			mask <<= m_cellSize - count;
-			tmp.m_cells[i + 1] |= mask;
-			tmp.m_cells[i] >>= count;
-		}
-	}
-	else
+	if (count / m_cellSize > 0)
 	{
 		for (int i = tmp.m_cellCount - 1; i >= 0; i--)
-			{
-				if (i - count / tmp.m_cellSize >= 0)
-				{
-					tmp.m_cells[i] = m_cells[i - (count / tmp.m_cellSize)];
-					tmp.m_cells[i - (count / tmp.m_cellSize)] = 0;
-				}
-				else
-					tmp.m_cells[i] = 0;
-			}
-		tmp.m_cells[m_cellCount - 1] >>= count % m_cellSize;
-		for (int i = tmp.m_cellCount - 2; i >= 0; i--)
 		{
-			UI mask = 0;
-			mask |= tmp.m_cells[i];
-			mask <<= m_cellSize - count % m_cellSize;
-			tmp.m_cells[i + 1] |= mask;
-			tmp.m_cells[i] >>= count % m_cellSize;
+			if (i - count / tmp.m_cellSize >= 0)
+			{
+				tmp.m_cells[i] = m_cells[i - (count / tmp.m_cellSize)];
+				tmp.m_cells[i - (count / tmp.m_cellSize)] = 0;
+			}
+			else
+				tmp.m_cells[i] = 0;
 		}
+	}
+	tmp.m_cells[m_cellCount - 1] >>= count % m_cellSize;
+	for (int i = tmp.m_cellCount - 2; i >= 0; i--)
+	{
+		UI mask = 0;
+		mask |= tmp.m_cells[i];
+		mask <<= m_cellSize - count % m_cellSize;
+		tmp.m_cells[i + 1] |= mask;
+		tmp.m_cells[i] >>= count % m_cellSize;
 	}
 	tmp.m_cells[m_cellCount - 1] >>= m_insignificantRankCount;
 	tmp.m_cells[m_cellCount - 1] <<= m_insignificantRankCount;
