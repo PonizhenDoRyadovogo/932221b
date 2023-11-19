@@ -16,7 +16,7 @@ BoolMatrix::BoolMatrix()
 	m_bool[0] = bool1;
 }
 
-BoolMatrix::BoolMatrix(int columns, int lines, int value)
+BoolMatrix::BoolMatrix(int lines, int columns, int value)
 {
 	assert(columns > 0 || lines > 0);
 	m_bool = new BoolVector[m_lines = lines];
@@ -115,7 +115,7 @@ int BoolMatrix::WeightMatrix()const
 	return w;
 }
 
-BoolVector BoolMatrix::ConjunctionLines(BoolMatrix& matr)const
+BoolVector BoolMatrix::ConjunctionLines(const BoolMatrix& matr)const
 {
 	BoolVector res(m_bool[0]);
 	for (int i = 1; i < m_lines; i++)
@@ -141,4 +141,133 @@ BoolMatrix& BoolMatrix::operator=(const BoolMatrix& matr)
 		m_bool[i] = matr.m_bool[i];
 	}
 	return *this;
+}
+
+BoolMatrix BoolMatrix::operator&(const BoolMatrix& other)const
+{
+	assert(m_lines == other.m_lines || m_columns == other.m_columns);
+	BoolMatrix tmp(m_lines, m_columns, 0);
+	for (int i = 0; i < m_lines; i++)
+	{
+		tmp.m_bool[i] = m_bool[i] & other.m_bool[i];
+	}
+	return tmp;
+}
+
+BoolMatrix BoolMatrix::operator|(const BoolMatrix& other)const
+{
+	assert(m_lines == other.m_lines || m_columns == other.m_columns);
+	BoolMatrix tmp(m_lines, m_columns, 0);
+	for (int i = 0; i < m_lines; i++)
+	{
+		tmp.m_bool[i] = m_bool[i] | other.m_bool[i];
+	}
+	return tmp;
+}
+
+BoolMatrix& BoolMatrix::operator&=(const BoolMatrix& other)
+{
+	BoolMatrix tmp = *this & other;
+	Swap(tmp);
+	return *this;
+}
+
+BoolMatrix& BoolMatrix::operator|=(const BoolMatrix& other)
+{
+	BoolMatrix tmp = *this | other;
+	Swap(tmp);
+	return *this;
+}
+
+BoolVector BoolMatrix::Disjunction(const BoolMatrix& other)const
+{
+	BoolVector res(m_bool[0]);
+	for (int i = 1; i < m_lines; i++)
+	{
+		res |= m_bool[i];
+	}
+	return res;
+}
+
+int BoolMatrix::WeightLinesMatrix(const int j)const
+{
+	assert(j >= 0 && j < m_lines);
+	int w = m_bool[j].Weight();
+	return w;
+}
+
+void BoolMatrix::InversionIJ(const int i, const int j)
+{
+	assert(i >= 0 && i < m_columns && j >= 0 && j < m_lines);
+	m_bool[j][i] = ~m_bool[j][i];
+}
+
+void BoolMatrix::Set0IJ(const int i, const int j)
+{
+	assert(i >= 0 && i < m_columns && j >= 0 && j < m_lines);
+	m_bool[j][i] = 0;
+}
+
+void BoolMatrix::Set1IJ(const int i, const int j)
+{
+	assert(i >= 0 && i < m_columns && j >= 0 && j < m_lines);
+	m_bool[j][i] = 1;
+}
+
+BoolMatrix BoolMatrix::operator^(const BoolMatrix& other)const
+{
+	assert(m_lines == other.m_lines || m_columns == other.m_columns);
+	BoolMatrix tmp(m_lines, m_columns, 0);
+	for (int i = 0; i < m_lines; i++)
+	{
+		tmp.m_bool[i] = m_bool[i] ^ other.m_bool[i];
+	}
+	return tmp;
+}
+
+BoolMatrix& BoolMatrix::operator^=(const BoolMatrix& other)
+{
+	BoolMatrix tmp = *this ^ other;
+	Swap(tmp);
+	return *this;
+}
+
+BoolMatrix BoolMatrix::operator~()const
+{
+	BoolMatrix copy(*this);
+	for (int i = 0; i < m_lines; i++)
+	{
+		copy.m_bool[i].Inversion();
+	}
+	return copy;
+}
+
+void BoolMatrix::InversionIJInRange(int i, const int j, const int count)
+{
+	assert(i >= 0 && i < m_columns && j >= 0 && j < m_lines && (count + i) < m_columns);
+	for (int k = 1; k <= count; k++)
+	{
+		m_bool[j][i] = ~m_bool[j][i];
+		i++;
+	}
+}
+
+void BoolMatrix::Set0IJInRange(int i, const int j, const int count)
+{
+	assert(i >= 0 && i < m_columns&& j >= 0 && j < m_lines && (count + i) < m_columns);
+	for (int k = 1; k <= count; k++)
+	{
+		m_bool[j][i] = 0;
+		i++;
+	}
+}
+
+void BoolMatrix::Set1IJInRange(int i, const int j, const int count)
+{
+	assert(i >= 0 && i < m_columns&& j >= 0 && j < m_lines && (count + i) < m_columns);
+	for (int k = 1; k <= count; k++)
+	{
+		m_bool[j][i] = 1;
+		i++;
+	}
 }

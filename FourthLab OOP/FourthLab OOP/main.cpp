@@ -24,17 +24,26 @@ void OutputCharMatrix(char** matr, int lines, int columns)
 
 int main()
 {
-	BoolMatrix matrix(8, 2, 1), matrix_, matrix3(16, 2, 0);
+	BoolMatrix matrix(2, 8, 1), matrix_, matrix3(2, 16, 0);
+	std::cout << "matrix:\n";
+	std::cout << matrix;
+	matrix.InversionIJ(0, 1);
+	matrix.Set0IJ(1, 0);
 	std::cout << "matrix:\n";
 	std::cout << matrix;
 
+	std::cout << "~matrix:\n";
+	matrix = ~matrix;
+	std::cout << matrix;
+
+	return 0;
 	std::cout << "weight = " << matrix.WeightMatrix()<<std::endl;
 
 	BoolMatrix copy_matrix(matrix);
 	std::cout << "copy_matrix:\n";
 	copy_matrix.PrintMatrix();
 
-	BoolMatrix matrix2(8, 3, 1);
+	BoolMatrix matrix2(3, 8, 1);
 	std::cout << "matrix2:\n";
 	matrix2.PrintMatrix();
 	matrix.Swap(matrix2);
@@ -46,7 +55,6 @@ int main()
 	matrix2 = matrix;
 	std::cout << "matrix2:\n" << matrix2;
 
-	return 0;
 	std::cout << "matrix_:\n";
 	matrix_.PrintMatrix();
 
