@@ -2,10 +2,10 @@
 #include<stdio.h>
 #include"BoolMatrix.h"
 
-char** CharMatrix(int lines, int columns)
+char** CharMatrix(int rows, int columns)
 {
-	char** matrix = new char* [lines];
-	for (int i = 0; i < lines; i++) {
+	char** matrix = new char* [rows];
+	for (int i = 0; i < rows; i++) {
 		matrix[i] = new char[columns + 1];
 		int j = 0;
 		for (j = 0; j < columns; j++) {
@@ -16,10 +16,10 @@ char** CharMatrix(int lines, int columns)
 	return matrix;
 }
 
-char** RandCharMatrix(int lines, int columns)
+char** RandCharMatrix(int rows, int columns)
 {
-	char** matrix = new char* [lines];
-	for (int i = 0; i < lines; i++) {
+	char** matrix = new char* [rows];
+	for (int i = 0; i < rows; i++) {
 		matrix[i] = new char[columns + 1];
 		int j = 0;
 		for (j = 0; j < columns; j++) {
@@ -30,9 +30,9 @@ char** RandCharMatrix(int lines, int columns)
 	return matrix;
 }
 
-void OutputCharMatrix(char** matr, int lines, int columns)
+void OutputCharMatrix(char** matr, int rows, int columns)
 {
-	for (int i = 0; i < lines; i++)
+	for (int i = 0; i < rows; i++)
 	{
 		std::cout << "|";
 		for (int j = 0; j < columns; j++)
@@ -41,9 +41,9 @@ void OutputCharMatrix(char** matr, int lines, int columns)
 	}
 }
 
-void DeleteMatrix(int lines, int columns, char** matrix)
+void DeleteMatrix(int rows, int columns, char** matrix)
 {
-	for (int i = 0; i < lines; i++) {
+	for (int i = 0; i < rows; i++) {
 		delete[] matrix[i];
 	}
 	delete[] matrix;
@@ -63,8 +63,8 @@ int main()
 	BoolMatrix matrix(2, 8, 1), matrix_, matrix3(2, 16, 0);
 	std::cout << "matrix:\n";
 	std::cout << matrix;
-	matrix.InversionIJ(0, 1);
-	matrix.Set0IJ(1, 0);
+	matrix.Inversion(0, 1);
+	matrix.Set0(1, 0);
 	std::cout << "matrix:\n";
 	std::cout << matrix;
 
@@ -73,37 +73,37 @@ int main()
 	std::cout << matrix;
 
 	
-	std::cout << "weight = " << matrix.WeightMatrix()<<std::endl;
+	std::cout << "weight = " << matrix.Weight()<<std::endl;
 
 	BoolMatrix copy_matrix(matrix);
 	std::cout << "copy_matrix:\n";
-	copy_matrix.PrintMatrix();
+	copy_matrix.Print();
 
 	BoolMatrix matrix2(3, 8, 1);
 	std::cout << "matrix2:\n";
-	matrix2.PrintMatrix();
+	matrix2.Print();
 	matrix.Swap(matrix2);
 	std::cout << "Work swap:\n" << "matrix:\n ";
-	matrix.PrintMatrix();
+	matrix.Print();
 	std::cout << "matrix2:\n";
-	matrix2.PrintMatrix();
+	matrix2.Print();
 
 	matrix2 = matrix;
 	std::cout << "matrix2:\n" << matrix2;
 
 	std::cout << "matrix_:\n";
-	matrix_.PrintMatrix();
+	matrix_.Print();
 
 	std::cin >> matrix_;
 	std::cout << "matrix_:\n";
-	matrix_.PrintMatrix();
+	matrix_.Print();
 
 	std::cout << "matrix3:\n";
-	matrix3.PrintMatrix();
+	matrix3.Print();
 
 	std::cin >> matrix3;
 	std::cout << "matrix3:\n";
-	matrix3.PrintMatrix();
+	matrix3.Print();
 
 }
 
