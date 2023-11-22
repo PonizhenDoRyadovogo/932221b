@@ -1,5 +1,3 @@
-#include "BoolMatrix.h"
-#include "../../ThirdLab OOP/ThirdLab OOP/BoolVector.cpp"
 #include<iostream>
 #include<assert.h>
 #include<stdint.h>

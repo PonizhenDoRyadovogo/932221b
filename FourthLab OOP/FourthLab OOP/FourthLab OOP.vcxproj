@@ -128,9 +128,11 @@
     </Link>
   </ItemDefinitionGroup>
   <ItemGroup>
+    <ClInclude Include="..\..\ThirdLab OOP\ThirdLab OOP\BoolVector.h" />
     <ClInclude Include="BoolMatrix.h" />
   </ItemGroup>
   <ItemGroup>
+    <ClCompile Include="..\..\ThirdLab OOP\ThirdLab OOP\BoolVector.cpp" />
     <ClCompile Include="BoolMatrix.cpp" />
     <ClCompile Include="main.cpp" />
   </ItemGroup>
