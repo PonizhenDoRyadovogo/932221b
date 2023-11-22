@@ -136,11 +136,8 @@ BoolVector& BoolVector::operator=(const BoolVector& other)
 BoolVector BoolVector::operator&(const BoolVector& other)const
 {
 	assert(m_length == other.m_length);
-	BoolVector tmp(m_length);
-	for (int i = 0; i < m_cellCount; i++)
-	{
-		tmp.m_cells[i] = m_cells[i] & other.m_cells[i];
-	}
+	BoolVector tmp(*this);
+	tmp &= other;
 	return tmp;
 }
 
@@ -168,8 +165,11 @@ BoolVector BoolVector::operator^(const BoolVector& other)const
 
 BoolVector& BoolVector::operator&=(const BoolVector& other)
 {
-	BoolVector tmp = *this & other;
-	Swap(tmp);
+	assert(m_length == other.m_length);
+	for (int i = 0; i < m_cellCount; i++)
+	{
+		m_cells[i] &= other.m_cells[i];
+	}
 	return *this;
 }
 

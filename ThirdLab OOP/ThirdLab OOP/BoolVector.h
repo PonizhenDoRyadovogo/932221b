@@ -32,8 +32,8 @@ public:
 	BoolVector operator<<(const int count)const;
 	BoolVector operator>>=(const int count);
 	BoolVector operator<<=(const int count);
-	void Set1InRange(int index, const int range);
-	void Set0InRange(int index, const int range);
+	void Set1InRange(int index, const int range = 1);
+	void Set0InRange(int index, const int range = 1);
 	void Set1All();
 	void Set0All();
 	int Weight();
