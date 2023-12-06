@@ -57,15 +57,6 @@ void BitwiseSort(std::vector<int>& arr, int left_lim, int right_lim, int k)
 	BitwiseSort(arr, i, right_lim, k - 1);
 }
 
-int IndexFirstNegative(std::vector<int> &arr)
-{
-	for (int i = 0; i < arr.size(); i++)
-	{
-		if (arr[i] < 0)
-			return i;
-	}
-}
-
 void BitSort(std::vector<int> &arr)
 {
 	int max = FindMax(arr);
@@ -75,15 +66,22 @@ void BitSort(std::vector<int> &arr)
 		max >>= 1;
 		k++;
 	}
-	BitwiseSort(arr, 0, arr.size() - 1, k);
-	std::vector<int> copy;
-	int index = IndexFirstNegative(arr);
-	for (int i = index; i < arr.size(); i++)
-		copy.push_back(arr[i]);
-	for (int i = 0; i < index; i++)
-		copy.push_back(arr[i]);
-	std::swap(copy, arr);
-	copy.clear();
+	int i = 0, j = arr.size() - 1;
+	while (i <= j)
+	{
+		while (arr[i] < 0)
+			i++;
+		while (arr[j] >= 0)
+			j--;
+		if (i <= j)
+		{
+			std::swap(arr[i], arr[j]);
+			i++;
+			j--;
+		}
+	}
+	BitwiseSort(arr, 0, j, k);
+	BitwiseSort(arr, i, arr.size() - 1, k);
 }
 
 void FileInArray(const char* name, std::vector<int>& arr)
@@ -134,4 +132,5 @@ int main()
 			std::cout << "Average time = " << average_time << " ms" << std::endl;
 		}
 	}
+	return 0;
 }
