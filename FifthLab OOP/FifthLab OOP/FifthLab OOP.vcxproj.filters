@@ -18,12 +18,15 @@
     <ClInclude Include="List.h">
       <Filter>Файлы заголовков</Filter>
     </ClInclude>
+    <ClInclude Include="..\..\SecondLabOOP\SecondLabOOP\Array.h">
+      <Filter>Файлы заголовков</Filter>
+    </ClInclude>
   </ItemGroup>
   <ItemGroup>
-    <ClCompile Include="List.cpp">
+    <ClCompile Include="main.cpp">
       <Filter>Исходные файлы</Filter>
     </ClCompile>
-    <ClCompile Include="main.cpp">
+    <ClCompile Include="..\..\SecondLabOOP\SecondLabOOP\Array.cpp">
       <Filter>Исходные файлы</Filter>
     </ClCompile>
   </ItemGroup>

@@ -127,10 +127,11 @@
     </Link>
   </ItemDefinitionGroup>
   <ItemGroup>
+    <ClInclude Include="..\..\SecondLabOOP\SecondLabOOP\Array.h" />
     <ClInclude Include="List.h" />
   </ItemGroup>
   <ItemGroup>
-    <ClCompile Include="List.cpp" />
+    <ClCompile Include="..\..\SecondLabOOP\SecondLabOOP\Array.cpp" />
     <ClCompile Include="main.cpp" />
   </ItemGroup>
   <Import Project="$(VCTargetsPath)\Microsoft.Cpp.targets" />
