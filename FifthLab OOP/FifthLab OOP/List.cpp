@@ -132,10 +132,7 @@ void List<Type>::PopKey(const Type& key)
 	auto it = FindValue(key);
 	if (it != End())
 	{
-		it.m_pos->m_prev->m_next = it.m_pos->m_next;
-		it.m_pos->m_next->m_prev = it.m_pos->m_prev;
-		delete it.m_pos;
-		--m_countNode;
+		DeleteNode(it);
 	}
 }
 
@@ -144,10 +141,7 @@ void List<Type>::PopOnIterator(Iterator& it)
 {
 	if (it != End())
 	{
-		it.m_pos->m_prev->m_next = it.m_pos->m_next;
-		it.m_pos->m_next->m_prev = it.m_pos->m_prev;
-		delete it.m_pos;
-		--m_countNode;
+		DeleteNode(it);
 	}
 }
 
