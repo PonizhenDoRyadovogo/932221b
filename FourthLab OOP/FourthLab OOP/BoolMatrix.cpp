@@ -121,7 +121,7 @@ int BoolMatrix::Weight()const
 	return w;
 }
 
-BoolVector BoolMatrix::ConjunctionRows(const BoolMatrix& matr)const
+BoolVector BoolMatrix::ConjunctionRows()const
 {
 	BoolVector res(m_bool[0]);
 	for (int i = 1; i < m_rows; i++)
@@ -185,7 +185,7 @@ BoolMatrix& BoolMatrix::operator|=(const BoolMatrix& other)
 	return *this;
 }
 
-BoolVector BoolMatrix::DisjunctionRows(const BoolMatrix& other)const
+BoolVector BoolMatrix::DisjunctionRows()const
 {
 	BoolVector res(m_bool[0]);
 	for (int i = 1; i < m_rows; i++)

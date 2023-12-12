@@ -19,8 +19,8 @@ public:
 	int GetColumnsCount()const; 
 	void Swap(BoolMatrix& other);
 	int Weight()const;
-	BoolVector ConjunctionRows(const BoolMatrix& matr)const;
-	BoolVector DisjunctionRows(const BoolMatrix& other)const;
+	BoolVector ConjunctionRows()const;
+	BoolVector DisjunctionRows()const;
 	BoolMatrix& operator=(const BoolMatrix& matr);
 	BoolMatrix operator&(const BoolMatrix& other)const;
 	BoolMatrix operator|(const BoolMatrix& other)const;
