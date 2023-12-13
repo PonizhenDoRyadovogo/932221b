@@ -12,5 +12,9 @@ int main()
 	foo.PushBack(555);
 	foo.PopPosition(1);
 	std::cout << foo;
+
+	auto from = foo.begin(), to = foo.end();
+	foo.DeleteRange(from, to);
+	std::cout << foo;
 	return 0;
 }

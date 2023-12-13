@@ -357,19 +357,17 @@ template<typename Type>
 List<Type> List<Type>::operator+(const List& other)const
 {
 	List res(*this);
-	auto it = other.Begin();
-	while (it != other.End())
-	{
-		res.PushBack(*it);
-		++it;
-	}
+	res += other;
 	return res;
 }
 
 template<typename Type>
 List<Type>& List<Type>::operator+=(const List& other)
 {
-	(*this + other).Swap(*this);
+	for (auto it = other.Begin(); it != other.End(); ++it)
+	{
+		PushBack(*it);
+	}
 	return *this;
 }
 
