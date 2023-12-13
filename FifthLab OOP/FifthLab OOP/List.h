@@ -37,11 +37,11 @@ public:
 	void Swap(List &other);
 	Iterator FindValue(const Type& value);
 	ConstIterator FindValue(const Type& value)const;
-	int Min()const;
-	int Max()const;
+	Type Min()const;
+	Type Max()const;
 	void Sort();
-	int& operator[](const int index);
-	const int& operator[](const int index)const;
+	Type& operator[](const int index);
+	const Type& operator[](const int index)const;
 	bool operator==(const List& other)const;
 	bool operator!=(const List& other)const;
 	List& operator=(const List& other);
@@ -53,14 +53,24 @@ public:
 	Iterator End();
 	ConstIterator End()const;
 
+	Iterator begin() { return Begin(); };
+	ConstIterator begin()const { return Begin(); };
+	Iterator end() { return End(); };
+	ConstIterator end()const { return End(); };
+
 private:
 	void MakeEmptyList();
-	void InsertNode(Iterator& it,const Type& value);
+	void InsertNode(const Iterator& it,const Type& value);
 	void DeleteNode(Iterator& it);
 	int m_countNode = 0;
 	Node* m_head = nullptr;
 	Node* m_tail = nullptr;
 };
+
+template<typename Type>
+std::ostream& operator<<(std::ostream& stream, const List<Type>& list);
+template<typename Type>
+std::istream& operator>>(std::istream& stream, List<Type>& list);
 
 template<typename Type>
 class List<Type>::Node
@@ -78,8 +88,9 @@ class List<Type>::TemplateIterator
 {
 	friend List;
 public:
-	TemplateIterator(LT* list = nullptr, Node* pos = nullptr);
+	TemplateIterator(LT* list = nullptr, Node* node = nullptr);
 	IT& operator*();
+	const IT& operator*() const;
 	TemplateIterator& operator++();
 	TemplateIterator& operator--();
 	TemplateIterator operator++(int);
@@ -88,7 +99,7 @@ public:
 	bool operator!=(const TemplateIterator& other)const;
 private:
 	LT* m_list = nullptr;
-	Node* m_pos = nullptr;
+	Node* m_node = nullptr;
 };
 
 
