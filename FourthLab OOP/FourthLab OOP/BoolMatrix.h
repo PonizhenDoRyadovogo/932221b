@@ -34,8 +34,8 @@ public:
 	BoolMatrix& operator^=(const BoolMatrix & other);
 	BoolMatrix operator~()const;
 	void InvertRange(int row, const int from, const int count);
-	void SetRange0(int row, const int from, const int count);
-	void SetRange1(int irow, const int from, const int count);
+	void SetRange0(const int row, int from, const int count);
+	void SetRange1(const int row, int from, const int count);
 private:
 	BoolVector *m_bool;
 	int m_columns;

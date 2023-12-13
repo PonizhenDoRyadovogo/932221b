@@ -253,27 +253,27 @@ void BoolMatrix::InvertRange(int row, const int from, const int count)
 	assert(row >= 0 && row < m_columns && from >= 0 && from < m_rows && (count + row) < m_columns);
 	for (int k = 1; k <= count; k++)
 	{
-		m_bool[from][row] = ~m_bool[from][row];
+		m_bool[row][from] = ~m_bool[from][row];
 		row++;
 	}
 }
 
-void BoolMatrix::SetRange0(int i, const int from, const int count)
+void BoolMatrix::SetRange0(const int row, int from, const int count)
 {
-	assert(i >= 0 && i < m_columns&& from >= 0 && from < m_rows && (count + i) < m_columns);
+	assert(row >= 0 && row < m_columns&& from >= 0 && from < m_rows);
 	for (int k = 1; k <= count; k++)
 	{
-		m_bool[from][i] = 0;
-		i++;
+		m_bool[row][from] = 0;
+		from++;
 	}
 }
 
-void BoolMatrix::SetRange1(int i, const int from, const int count)
+void BoolMatrix::SetRange1(const int row, int from, const int count)
 {
-	assert(i >= 0 && i < m_columns&& from >= 0 && from < m_rows && (count + i) < m_columns);
+	assert(row >= 0 && row < m_columns&& from >= 0 && from < m_rows);
 	for (int k = 1; k <= count; k++)
 	{
-		m_bool[from][i] = 1;
-		i++;
+		m_bool[row][from] = 1;
+		from++;
 	}
 }

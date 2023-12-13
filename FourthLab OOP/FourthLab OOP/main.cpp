@@ -53,6 +53,11 @@ int main()
 {	
 	srand(time(0));
 
+	BoolMatrix matrixnon(8, 16, 1);
+	//std::cin >> matrixnon;
+	matrixnon.SetRange0(1, 0, matrixnon.GetColumnsCount());
+	std::cout << matrixnon;
+	return 0;
 	char** char_matr = RandCharMatrix(2, 8);
 	OutputCharMatrix(char_matr, 2, 8);
 	BoolMatrix matr(char_matr, 2);
