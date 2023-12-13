@@ -6,6 +6,11 @@
 #include"List.h"
 
 template<typename Type>
+std::ostream& operator<<(std::ostream& stream, const List<Type>& list);
+template<typename Type>
+std::istream& operator>>(std::istream& stream, List<Type>& list);
+
+template<typename Type>
 List<Type>::List(const int size, const Type& value)
 {
 	MakeEmptyList();
@@ -167,28 +172,23 @@ void List<Type>::MakeEmptyList()
 }
 
 template<typename Type>
-void List<Type>::InsertNode(const Iterator& it, const Type& value)
+void List<Type>::InsertNode(Iterator& it, const Type& value)
 {
 	Node* q = new Node;
 	q->m_value = value;
-	q->m_next = it.m_node;
-	q->m_prev = it.m_node->m_prev;
-	it.m_node->m_prev->m_next = q;
-	it.m_node->m_prev = q;
+	q->m_next = it.m_pos;
+	q->m_prev = it.m_pos->m_prev;
+	it.m_pos->m_prev->m_next = q;
+	it.m_pos->m_prev = q;
 	m_countNode++;
 }
 
 template<typename Type>
 void List<Type>::DeleteNode(Iterator& it)
 {
-	if (it == End()) {
-		return;
-	}
-
-	auto deleted = it++;
-	deleted.m_node->m_next->m_prev = deleted.m_node->m_prev;
-	deleted.m_node->m_prev->m_next = deleted.m_node->m_next;
-	delete deleted.m_node;
+	it.m_pos->m_next->m_prev = it.m_pos->m_prev;
+	it.m_pos->m_prev->m_next = it.m_pos->m_next;
+	delete it.m_pos;
 	--m_countNode;
 }
 
@@ -259,10 +259,10 @@ List<Type>::ConstIterator List<Type>::FindValue(const Type& value)const
 }
 
 template<typename Type>
-Type List<Type>::Min()const
+int List<Type>::Min()const
 {
 	assert(m_countNode > 0);
-	Type min = m_head->m_next->m_value;
+	int min = m_head->m_next->m_value;
 	Node* tmp_it = m_head->m_next;
 	while (tmp_it != m_tail)
 	{
@@ -274,10 +274,10 @@ Type List<Type>::Min()const
 }
 
 template<typename Type>
-Type List<Type>::Max()const
+int List<Type>::Max()const
 {
 	assert(m_countNode > 0);
-	Type max = m_head->m_next->m_value;
+	int max = m_head->m_next->m_value;
 	Node* tmp_it = m_head->m_next;
 	while (tmp_it != m_tail)
 	{
@@ -294,11 +294,11 @@ void List<Type>::Sort()
 	for (auto it = Begin(); it != End(); ++it)
 		for (auto jt = Begin(); jt != End(); ++jt)
 			if (*it < *jt)
-				std::swap(it.m_node->m_value, jt.m_node->m_value);
+				std::swap(it.m_pos->m_value, jt.m_pos->m_value);
 }
 
 template<typename Type>
-Type& List<Type>::operator[](const int index)
+int& List<Type>::operator[](const int index)
 {
 	assert(index < m_countNode);
 	Node* tmp_it = m_head->m_next;
@@ -310,7 +310,7 @@ Type& List<Type>::operator[](const int index)
 }
 
 template<typename Type>
-const Type& List<Type>::operator[](const int index)const
+const int& List<Type>::operator[](const int index)const
 {
 	assert(index < m_countNode);
 	Node* tmp_it = m_head->m_next;
@@ -324,19 +324,7 @@ const Type& List<Type>::operator[](const int index)const
 template<typename Type>
 bool List<Type>::operator==(const List& other)const
 {
-	if (m_countNode != other.m_countNode)
-		return false;
-	else if (m_head == other.m_head)
-		return true;
-	else
-	{
-		for (auto it = Begin(), jt = other.Begin(); it != End(); ++it, ++jt)
-		{
-			if (*it != *jt)
-				return false;
-		}
-		return true;
-	}
+	return (m_head == other.m_head && m_tail == other.m_tail);
 }
 
 template<typename Type>
@@ -348,12 +336,12 @@ bool List<Type>::operator!=(const List& other)const
 template<typename Type>
 List<Type>& List<Type>::operator=(const List& other)
 {
-	if (m_head == other.m_head)
-		return *this;
 	Clear();
-	for (const Type& value : other) {
-		PushBack(value);
+	for (Node* tmp_ptr = other.m_head->m_next; tmp_ptr != other.m_tail; tmp_ptr = tmp_ptr->m_next)
+	{
+		PushBack(tmp_ptr->m_value);
 	}
+	m_countNode = other.m_countNode;
 	return *this;
 }
 
@@ -373,7 +361,7 @@ List<Type> List<Type>::operator+(const List& other)const
 template<typename Type>
 List<Type>& List<Type>::operator+=(const List& other)
 {
-	(*this + other).Swap(*this);
+	*this = *this + other;
 	return *this;
 }
 
@@ -401,9 +389,9 @@ std::istream& operator>>(std::istream& stream, List<Type>& list)
 
 template<typename Type>
 template<typename IT, typename LT>
-List<Type>::TemplateIterator<IT, LT>::TemplateIterator(LT* list, Node* node)
+List<Type>::TemplateIterator<IT, LT>::TemplateIterator(LT* list, Node* pos)
 {
-	m_node = node;
+	m_pos = pos;
 	m_list = list;
 }
 
@@ -435,23 +423,15 @@ template<typename Type>
 template<typename IT, typename LT>
 IT& List<Type>::TemplateIterator<IT, LT>::operator*()
 {
-	assert(m_node != nullptr);
-	return m_node->m_value;
-}
-
-template<typename Type>
-template<typename IT, typename LT>
-const IT& List<Type>::TemplateIterator<IT, LT>::operator*() const
-{
-	assert(m_node != nullptr);
-	return m_node->m_value;
+	assert(m_pos != nullptr);
+	return m_pos->m_value;
 }
 
 template<typename Type>
 template<typename IT, typename LT>
 List<Type>::TemplateIterator<IT, LT>& List<Type>::TemplateIterator <IT, LT>::operator++()
 {
-	m_node = m_node->m_next;
+	m_pos = m_pos->m_next;
 	return *this;
 }
 
@@ -459,7 +439,7 @@ template<typename Type>
 template<typename IT, typename LT>
 List<Type>::TemplateIterator<IT, LT>& List<Type>::TemplateIterator <IT, LT>::operator--()
 {
-	m_node = m_node->m_prev;
+	m_pos = m_pos->m_prev;
 	return *this;
 }
 
@@ -467,8 +447,8 @@ template<typename Type>
 template<typename IT, typename LT>
 List<Type>::TemplateIterator<IT, LT> List<Type>::TemplateIterator <IT, LT>::operator++(int)
 {
-	TemplateIterator old(m_list, m_node);
-	m_node = m_node->m_next;
+	TemplateIterator old(m_list, m_pos);
+	m_pos = m_pos->m_next;
 	return old;
 }
 
@@ -476,8 +456,8 @@ template<typename Type>
 template<typename IT, typename LT>
 List<Type>::TemplateIterator<IT, LT> List<Type>::TemplateIterator <IT, LT>::operator--(int)
 {
-	TemplateIterator old(m_list, m_node);
-	m_node = m_node->m_prev;
+	TemplateIterator old(m_list, m_pos);
+	m_pos = m_pos->m_prev;
 	return old;
 }
 
@@ -486,7 +466,7 @@ template<typename IT, typename LT>
 bool List<Type>::TemplateIterator <IT, LT>::operator==(const TemplateIterator& other)const
 {
 	assert(m_list == other.m_list);
-	return (m_list == other.m_list && m_node == other.m_node);
+	return (m_list == other.m_list && m_pos == other.m_pos);
 }
 
 template<typename Type>
