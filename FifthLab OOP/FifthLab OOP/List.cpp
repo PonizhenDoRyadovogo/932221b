@@ -6,11 +6,6 @@
 #include"List.h"
 
 template<typename Type>
-std::ostream& operator<<(std::ostream& stream, const List<Type>& list);
-template<typename Type>
-std::istream& operator>>(std::istream& stream, List<Type>& list);
-
-template<typename Type>
 List<Type>::List(const int size, const Type& value)
 {
 	MakeEmptyList();
