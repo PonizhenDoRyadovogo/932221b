@@ -1,7 +1,6 @@
 #include<iostream>
 #include<vector>
-#include"../../FourthLab OOP/FourthLab OOP/BoolMatrix.h"
-#include"../../ThirdLab OOP/ThirdLab OOP/BoolVector.h"
+#include "TopologicalSort.h"
 
 void PrintArray(std::vector<int> a)
 {
@@ -21,22 +20,23 @@ void PushVertex(std::vector<int>& res, BoolVector& bool_vec)
 	}
 }
 
-std::vector<int> TopologicalSort(BoolMatrix& matr)
+std::vector<int> TopologicalSortMatrix(BoolMatrix& matr)
 {
 	std::vector<int> res;
 	int size = matr.GetColumnsCount();
-	BoolVector keeper(size), noPredecessor, newVertex;
+	BoolVector keeper(size), noPredecessor, new_edges;
 	do
 	{
 		noPredecessor = ~matr.DisjunctionRows();
 		if (noPredecessor.Weight() == 0)//checking for a cycle
 		{
-			std::cout << "We have cycle!!!\n";
-			break;
+			std::cout << "We have cycle!!!. Return empty vector\n";
+			res.clear();
+			return res;
 		}
-		newVertex = noPredecessor & ~keeper;
-		keeper |= newVertex;
-		PushVertex(res, newVertex);
+		new_edges = noPredecessor & ~keeper;
+		keeper |= new_edges;
+		PushVertex(res, new_edges);
 		for (int i = 0;i < res.size(); ++i)
 		{
 			matr.SetRange0(res[i] - 1, 0, size);
@@ -47,12 +47,14 @@ std::vector<int> TopologicalSort(BoolMatrix& matr)
 
 int main()
 {
-	BoolMatrix matr(4, 4, 0);
+	Graph gr;
+
+	/*BoolMatrix matr(4, 4, 0);
 	std::cin >> matr;
 	std::cout << matr << std::endl;
 	std::vector<int> res;
-	res = TopologicalSort(matr);
+	res = TopologicalSortMatrix(matr);
 	std::cout << "decision: ";
 	PrintArray(res);
-	return 0;
+	return 0;*/
 }

@@ -127,13 +127,17 @@
     </Link>
   </ItemDefinitionGroup>
   <ItemGroup>
+    <ClCompile Include="..\..\FifthLab OOP\FifthLab OOP\List.cpp" />
     <ClCompile Include="..\..\FourthLab OOP\FourthLab OOP\BoolMatrix.cpp" />
     <ClCompile Include="..\..\ThirdLab OOP\ThirdLab OOP\BoolVector.cpp" />
     <ClCompile Include="Topological.cpp" />
+    <ClCompile Include="TopologicalSort.cpp" />
   </ItemGroup>
   <ItemGroup>
+    <ClInclude Include="..\..\FifthLab OOP\FifthLab OOP\List.h" />
     <ClInclude Include="..\..\FourthLab OOP\FourthLab OOP\BoolMatrix.h" />
     <ClInclude Include="..\..\ThirdLab OOP\ThirdLab OOP\BoolVector.h" />
+    <ClInclude Include="TopologicalSort.h" />
   </ItemGroup>
   <Import Project="$(VCTargetsPath)\Microsoft.Cpp.targets" />
   <ImportGroup Label="ExtensionTargets">

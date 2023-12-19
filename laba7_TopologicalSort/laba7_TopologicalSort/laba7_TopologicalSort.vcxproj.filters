@@ -24,12 +24,24 @@
     <ClCompile Include="..\..\ThirdLab OOP\ThirdLab OOP\BoolVector.cpp">
       <Filter>Исходные файлы</Filter>
     </ClCompile>
+    <ClCompile Include="TopologicalSort.cpp">
+      <Filter>Исходные файлы</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\FifthLab OOP\FifthLab OOP\List.cpp">
+      <Filter>Исходные файлы</Filter>
+    </ClCompile>
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="..\..\FourthLab OOP\FourthLab OOP\BoolMatrix.h">
       <Filter>Файлы заголовков</Filter>
     </ClInclude>
     <ClInclude Include="..\..\ThirdLab OOP\ThirdLab OOP\BoolVector.h">
+      <Filter>Файлы заголовков</Filter>
+    </ClInclude>
+    <ClInclude Include="TopologicalSort.h">
+      <Filter>Файлы заголовков</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\FifthLab OOP\FifthLab OOP\List.h">
       <Filter>Файлы заголовков</Filter>
     </ClInclude>
   </ItemGroup>
