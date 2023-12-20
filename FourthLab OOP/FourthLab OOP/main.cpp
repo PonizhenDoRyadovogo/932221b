@@ -53,6 +53,14 @@ int main()
 {	
 	srand(time(0));
 
+	std::vector<std::vector<bool>> vec = { {0, 1, 0, 0, 0},
+		{0, 0, 0, 0, 0},
+		{0, 1, 0, 0, 1},
+		{0, 1, 0, 0, 0},
+		{1, 0, 0, 0, 0} };
+	BoolMatrix goo(vec);
+	std::cout << goo;
+	return 0;
 	BoolMatrix matrixnon(8, 16, 1);
 	//std::cin >> matrixnon;
 	matrixnon.SetRange0(1, 0, matrixnon.GetColumnsCount());

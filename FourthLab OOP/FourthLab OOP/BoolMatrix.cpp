@@ -4,7 +4,7 @@
 #include<string.h>
 #include<string>
 #include<stdio.h>
-
+#include<vector>
 #include "BoolMatrix.h"
 
 BoolMatrix::BoolMatrix()
@@ -37,6 +37,17 @@ BoolMatrix::BoolMatrix(char** matrix, int rows)
 	for (int i = 0; i < m_rows; i++)
 	{
 		m_bool[i] = BoolVector(matrix[i]);
+	}
+}
+
+BoolMatrix::BoolMatrix(std::vector<std::vector<bool>>& vec)
+{
+	m_rows = vec.size();
+	m_columns = vec.size();
+	m_bool = new BoolVector[m_rows];
+	for (int i = 0; i < vec.size(); ++i)
+	{
+		m_bool[i] = BoolVector(vec[i]);
 	}
 }
 

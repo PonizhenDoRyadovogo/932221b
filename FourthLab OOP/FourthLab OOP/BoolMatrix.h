@@ -1,6 +1,7 @@
 #pragma once
 #include<stdint.h>
 #include<iostream>
+#include<vector>
 #include "../../ThirdLab OOP/ThirdLab OOP/BoolVector.h"
 
 class BoolMatrix
@@ -10,6 +11,7 @@ public:
 	BoolMatrix();
 	BoolMatrix(int rows, int columns, bool value);
 	BoolMatrix(char** matrix, int rows);
+	BoolMatrix(std::vector<std::vector<bool>>& vec);
 	BoolMatrix(const BoolMatrix& other);
 	~BoolMatrix();
 	const BoolVector& operator[](const int i) const;
