@@ -3,6 +3,10 @@
 
 int main()
 {
+	std::vector<bool> vec = { 1, 0, 0 ,0 , 1, 1, 1, 1 };
+	BoolVector goo(vec);
+	std::cout << goo;
+	return 0;
 	BoolVector foo1(50, 1);
 	std::cout << "left shift:\n";
 	for (int i = 0; i <= foo1.Length(); ++i) {

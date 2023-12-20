@@ -1,6 +1,7 @@
 #pragma once
 #include<stdint.h>
 #include<iostream>
+#include<vector>
 
 class BoolVector
 {
@@ -12,6 +13,7 @@ public:
 	BoolVector(const UI length, const bool value = false);
 	BoolVector(const BoolVector& other);
 	BoolVector(const char* str);
+	BoolVector(std::vector<bool>& vec);
 	~BoolVector();
 	int Length()const;
 	void Set1(const int cell, const int pos_cell);

@@ -4,6 +4,7 @@
 #include<stdint.h>
 #include<string.h>
 #include<string>
+#include<vector>
 
 BoolVector::BoolVector()
 {
@@ -55,6 +56,23 @@ BoolVector::BoolVector(const char* str)
 	for (int i = 0; i < strlen(str); i++)
 	{
 		if (str[i] == '1')
+			Set1(i / 8, i % 8);
+		else
+			Set0(i / 8, i % 8);
+	}
+	m_cells[m_cellCount - 1] = m_cells[m_cellCount - 1] >> m_insignificantRankCount;
+	m_cells[m_cellCount - 1] = m_cells[m_cellCount - 1] << m_insignificantRankCount;
+}
+
+BoolVector::BoolVector(std::vector<bool>& vec)
+{
+	m_length = vec.size();
+	m_cellCount = m_length / 8 + bool(m_length % 8);
+	m_insignificantRankCount = (m_cellCount * m_cellSize) - m_length;
+	m_cells = new UC[m_cellCount];
+	for (int i = 0; i < vec.size();++i)
+	{
+		if (vec[i] == true)
 			Set1(i / 8, i % 8);
 		else
 			Set0(i / 8, i % 8);
