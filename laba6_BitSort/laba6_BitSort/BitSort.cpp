@@ -5,10 +5,10 @@
 #include<vector>
 #include<chrono>
 
-void PrintArray(std::vector<int> a, int l, int r)
+void PrintArray(std::vector<int> a)
 {
 	std::cout << "[";
-	for (int i = l; i <= r; i++)
+	for (int i = 0; i < a.size(); i++)
 		std::cout << a[i] << " ";
 	std::cout << "]";
 }
@@ -26,7 +26,7 @@ bool CheckSort(std::vector<int>& arr)
 int FindMax(std::vector<int>& arr)
 {
 	int max = arr[0];
-	for (int i = 0; i < arr.size(); i++)
+	for (int i = 1; i < arr.size(); i++)
 	{
 		if (arr[i] > max)
 			max = arr[i];
@@ -60,18 +60,19 @@ void BitwiseSort(std::vector<int>& arr, int left_lim, int right_lim, int k)
 void BitSort(std::vector<int> &arr)
 {
 	int max = FindMax(arr);
-	int k = 0;
-	while (max)
+	int k = 31;
+	int mask = 1 << 30;
+	while ((max & mask) == 0)
 	{
-		max >>= 1;
-		k++;
+		mask >>= 1;
+		k--;
 	}
 	int i = 0, j = arr.size() - 1;
 	while (i <= j)
 	{
-		while (arr[i] < 0)
+		while (i < arr.size() && arr[i] < 0)
 			i++;
-		while (arr[j] >= 0)
+		while (j >= 0 && arr[j] >= 0 )
 			j--;
 		if (i <= j)
 		{
