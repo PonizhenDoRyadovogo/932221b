@@ -125,6 +125,18 @@ void BoolVector::Swap(BoolVector& other)
 	std::swap(m_cells, other.m_cells);
 }
 
+bool BoolVector::operator==(const BoolVector& other)const
+{
+	if (Length() != other.Length())
+		return false;
+	for (int i = 0; i < Length(); ++i)
+	{
+		if (m_cells[i] != other.m_cells[i])
+			return false;
+	}
+	return true;
+}
+
 BoolVector BoolVector::operator ~()const
 {
 	BoolVector copy(*this);

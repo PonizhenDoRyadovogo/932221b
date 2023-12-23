@@ -20,6 +20,7 @@ public:
 	void Set0(const int cell, const int pos_cell);
 	void Inversion();
 	void Swap(BoolVector& other);
+	bool operator==(const BoolVector& other)const;
 	BoolVector operator~()const;
 	BoolVector& operator=(const BoolVector& other);
 	BoolVector operator&(const BoolVector& other)const;

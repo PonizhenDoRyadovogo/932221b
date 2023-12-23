@@ -3,9 +3,12 @@
 
 int main()
 {
-	std::vector<bool> vec = { 1, 0, 0 ,0 , 1, 1, 1, 1 };
-	BoolVector goo(vec);
-	std::cout << goo;
+	BoolVector goo;
+	BoolVector goo2(2, 1);
+	if (goo == goo2)
+		std::cout << "equal";
+	else
+		std::cout << "not equal";
 	return 0;
 	BoolVector foo1(50, 1);
 	std::cout << "left shift:\n";
