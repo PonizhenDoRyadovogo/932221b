@@ -364,7 +364,7 @@ void BoolVector::Set0All()
 	Set0InRange(0, m_length);
 }
 
-int BoolVector::Weight()
+int BoolVector::Weight()const
 {
 	int count = 0;
 	for (int i = 0; i < m_cellCount; i++)

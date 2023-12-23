@@ -38,7 +38,7 @@ public:
 	void Set0InRange(int index, const int range = 1);
 	void Set1All();
 	void Set0All();
-	int Weight();
+	int Weight()const;
 	friend std::ostream& operator <<(std::ostream& stream, const BoolVector& vector);
 	
 private:
