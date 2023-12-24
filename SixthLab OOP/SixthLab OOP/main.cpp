@@ -3,15 +3,20 @@
 
 int main()
 {
-	Set s("Hello World!");
+	Set s("Hello, World!");
 	Set foo;
 	std::cout << s;
-	std::cin >> foo;
+	//foo = ~s;
+	foo = s + 'm';
 	std::cout << foo;
-	if (foo.Find('W'))
-		std::cout << "HAVE\n";
+	std::cout << "Max = " << foo.Max() << " Min = " << foo.Min() << "\n";
+	return 0;
+	std::cout << foo;
+	if (foo != s)
+		std::cout << "true\n";
 	else
-		std::cout << "DONT HAVE\n";
-
+		std::cout << "false\n";
+	Set goo = s & foo;
+	std::cout << goo;
 	return 0;
 }

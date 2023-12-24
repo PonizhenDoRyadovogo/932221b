@@ -26,10 +26,160 @@ Set::Set(const Set& other)
 
 bool Set::Find(const char value)const
 {
-	if ((int)value >= m_size || (int)value < m_shift)
+	if ((int)value >= m_shift || (int)value < m_size)
 		return false;
 	else
 		return (operator[]((int)value - m_shift));
+}
+
+int Set::Capacity()const
+{
+	return BoolVector::Weight();
+}
+
+char Set::Max()const
+{
+	char max;
+	if (BoolVector::operator[](m_size - 1))
+	{
+		max = (char)((m_size - 1) + m_shift);
+		return max;
+	}
+	else
+	{
+		for (int i = m_size - 2; i >= 0; --i)
+		{
+			if ((BoolVector::operator[](i)))
+			{
+				max = (char)(i + m_shift);
+				return max;
+			}
+		}
+	}
+}
+
+char Set::Min()const
+{
+	char min = 0;
+	if(BoolVector::operator[](0))
+		return min = (char)(m_shift);
+	else
+	{
+		for (int i = 1; i < m_size; ++i)
+		{
+			if ((BoolVector::operator[](i)))
+			{
+				min = (char)(i + m_shift);
+				return min;
+			}
+		}
+	}
+}
+
+Set& Set::operator=(const Set& other)
+{
+	if (this == &other)
+		return *this;
+	BoolVector::operator=(other);
+	return *this;
+}
+
+bool Set::operator==(const Set& other)const
+{
+	return BoolVector::operator==(other);
+}
+
+bool Set::operator!=(const Set& other)const
+{
+	return !(*this == other);
+}
+
+Set& Set::operator|=(const Set& other)
+{
+	BoolVector::operator|=(other);
+	return *this;
+}
+
+Set Set::operator|(const Set& other)const
+{
+	Set tmp(*this);
+	tmp |= other;
+	return tmp;
+}
+
+Set& Set::operator&=(const Set& other)
+{
+	BoolVector::operator&=(other);
+	return *this;
+}
+
+Set Set::operator&(const Set& other)const
+{
+	Set tmp(*this);
+	tmp &= other;
+	return tmp;
+}
+
+Set Set::operator/=(const Set& other)
+{
+	BoolVector::operator&=(~other);
+	return *this;
+}
+
+Set Set::operator/(const Set& other)const
+{
+	Set tmp(*this);
+	tmp /= other;
+	return tmp;
+}
+
+Set Set::operator~()const
+{
+	Set res(*this);
+	res.Inversion();
+	return res;
+}
+
+/*
+*@Set Set::operator+ 
+* @return *this
+* 
+* 
+* как это сделать?
+*/
+
+Set Set::operator+(const char value)const
+{
+	if ((int)value >= m_shift || (int)value < m_size)
+	{
+		Set tmp(*this);
+		tmp.Set1InRange((int)value - m_shift);
+		return tmp;
+	}
+	return *this;
+}
+
+Set Set::operator+=(const char value)
+{
+	*this = *this + value;
+	return *this;
+}
+
+Set Set::operator-(const char value)const
+{
+	if ((int)value >= m_shift || (int)value < m_size)
+	{
+		Set tmp(*this);
+		tmp.Set0InRange((int)value - m_shift);
+		return tmp;
+	}
+	return *this;
+}
+
+Set Set::operator-=(const char value)
+{
+	*this = *this - value;
+	return *this;
 }
 
 std::ostream& operator<<(std::ostream& stream, const Set& set)
