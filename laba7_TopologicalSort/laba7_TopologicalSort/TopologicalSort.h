@@ -11,15 +11,23 @@ public:
 	struct Lider;
 public:
 	Graph();
+	void PrintGraph() const;
+	void AddEdge(const int left, const int right);//need private
+	void DeleteEdge(const int left, const int right);//need private
 private:
 	List<Lider> m_list;
-
+	
 };
 
 struct Graph::Lider
 {
-	struct Trailer;
-	int key;
-	int count_in_arc;
-	List<Lider* > trailers;
+	Lider() = default;
+	Lider(const int value)
+	{
+		key = value;
+	}
+	bool operator==(const Graph::Lider& lid)const;
+	int key = 0;
+	int input_arc_count = 0;
+	List<List<Lider>::Iterator> trailers;
 };
