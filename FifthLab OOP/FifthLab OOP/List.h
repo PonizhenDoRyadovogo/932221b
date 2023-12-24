@@ -15,7 +15,7 @@ public:
 	using ConstIterator = TemplateIterator<const Type, const List>;
 public:
 	class Node;
-	List(const int size = 10, const Type& value = Type());
+	List(const int size = 0, const Type& value = Type());
 	List(const Array<Type>& arr);
 	List(const List& other);
 	~List();
