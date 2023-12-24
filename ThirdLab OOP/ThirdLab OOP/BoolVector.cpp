@@ -131,7 +131,7 @@ bool BoolVector::operator==(const BoolVector& other)const
 		return false;
 	for (int i = 0; i < Length(); ++i)
 	{
-		if (m_cells[i] != other.m_cells[i])
+		if (operator[](i) != other[i])
 			return false;
 	}
 	return true;

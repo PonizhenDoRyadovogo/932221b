@@ -3,8 +3,9 @@
 
 int main()
 {
-	BoolVector goo;
-	BoolVector goo2(2, 1);
+	BoolVector goo = "1000111";
+	BoolVector goo2 = "1000111";
+	std::cout << goo << goo2;
 	if (goo == goo2)
 		std::cout << "equal";
 	else
