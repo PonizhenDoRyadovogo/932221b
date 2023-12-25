@@ -32,14 +32,21 @@ bool Set::Find(const char value)const
 		return (operator[]((int)value - m_shift));
 }
 
-int Set::Capacity()const
+int Set::Cardinality()const
 {
 	return BoolVector::Weight();
 }
 
+/*
+* @function Set::Max
+* @brief retun max element
+* @return max elemnt
+* 
+*/
+
 char Set::Max()const
 {
-	char max;
+	char max = '~';
 	if (BoolVector::operator[](m_size - 1))
 	{
 		max = (char)((m_size - 1) + m_shift);
@@ -56,11 +63,12 @@ char Set::Max()const
 			}
 		}
 	}
+	return max;
 }
 
 char Set::Min()const
 {
-	char min = 0;
+	char min = '0';
 	if(BoolVector::operator[](0))
 		return min = (char)(m_shift);
 	else
@@ -74,6 +82,7 @@ char Set::Min()const
 			}
 		}
 	}
+	return min;
 }
 
 Set& Set::operator=(const Set& other)
@@ -195,6 +204,7 @@ std::ostream& operator<<(std::ostream& stream, const Set& set)
 
 std::istream& operator>>(std::istream& stream, Set& set)
 {
+	set.Set0All();
 	std::string str;
 	std::getline(stream, str);
 	for (int i = 0; i < str.size(); ++i)

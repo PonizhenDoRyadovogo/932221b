@@ -13,8 +13,18 @@ public:
 	Set(const Set& other);
 	//~Set(); он не нужен, так как вызовется деструктор из BoolVector?
 	bool Find(const char value)const;
-	int Capacity()const;
+	int Cardinality()const;
+/*
+* @function Max
+* @return returns the maximum element in the set. If if the set is empty, returns ~
+*
+*/
 	char Max()const;
+/*
+* @function Min
+* @return returns the minimum element in the set. If if the set is empty, returns 0
+*
+*/
 	char Min()const;
 	Set& operator=(const Set& other);
 	bool operator==(const Set& other)const;

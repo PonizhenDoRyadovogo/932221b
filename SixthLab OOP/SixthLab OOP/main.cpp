@@ -3,6 +3,10 @@
 
 int main()
 {
+	Set a;
+	std::cout << a;
+	std::cout << a.Min();
+	return 0;
 	Set s("Hello, World!");
 	Set foo;
 	std::cout << s;
