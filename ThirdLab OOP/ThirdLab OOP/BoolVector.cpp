@@ -346,6 +346,27 @@ BoolVector BoolVector::operator <<=(const int count)
 	return *this;
 }
 
+BoolVector BoolVector::operator+(const BoolVector& other) const
+{
+	BoolVector res(m_length + other.m_length);
+	for (int i = 0; i < m_length; ++i)
+	{
+		res[i] = operator[](i);
+	}
+	for (int i = 0, j = m_length; i < other.m_length && j < res.m_length; ++i, ++j)
+	{
+		res[j] = other[i];
+	}
+	return res;
+}
+
+BoolVector& BoolVector::operator+=(const BoolVector& other)
+{
+	BoolVector tmp = *this + other;
+	Swap(tmp);
+	return *this;
+}
+
 void BoolVector::Set1InRange(int index, const int range)
 {
 	assert(index >= 0 || (index < m_cellCount&& range < m_length));
@@ -432,6 +453,17 @@ std::istream& operator >>(std::istream& stream, BoolVector& vector)
 	}
 	delete[]str;
 	return stream;
+}
+
+const BoolVector::UC* BoolVector::getCells() const
+{
+	return m_cells;
+}
+
+void BoolVector::addSymbol(const UC symbol, int index)
+{
+	assert(index < m_cellCount);
+	m_cells[index] = symbol;
 }
 
 bool BoolVector::BoolRank::operator==(BoolRank& other)const

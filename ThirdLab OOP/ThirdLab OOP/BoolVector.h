@@ -35,13 +35,16 @@ public:
 	BoolVector operator<<(const int count)const;
 	BoolVector operator>>=(const int count);
 	BoolVector operator<<=(const int count);
+	BoolVector operator+(const BoolVector& other)const;
+	BoolVector& operator+=(const BoolVector& other);
 	void Set1InRange(int index, const int range = 1);
 	void Set0InRange(int index, const int range = 1);
 	void Set1All();
 	void Set0All();
 	int Weight()const;
 	friend std::ostream& operator <<(std::ostream& stream, const BoolVector& vector);
-	
+	const UC* getCells() const;
+	void addSymbol(const UC symbol, int index);
 private:
 	UI m_length = 0;//length vector
 	UI m_cellCount = 0;//number cells
